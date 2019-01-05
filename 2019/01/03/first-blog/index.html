@@ -15,12 +15,13 @@
 
 
 
+<meta name="keywords" content="Java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="first blog!">
 <meta property="og:url" content="http://yoursite.com/2019/01/03/first-blog/index.html">
 <meta property="og:site_name" content="戴岭南的个人博客">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-03T13:19:15.519Z">
+<meta property="og:updated_time" content="2019-01-05T17:29:23.335Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="first blog!">
 
@@ -70,7 +71,7 @@
         isCategory: false,
         fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
         scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
-        search: 
+        search: false
     }
 </script>
 
@@ -179,7 +180,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li></ul>
                     </div>
                 </section>
                 
@@ -208,6 +209,10 @@
             </div>
         </div>
     </header>                
+</div>
+
+<div style="position:absolute; bottom:-10px;  left:0px;">
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=549606490&auto=1&height=66"></iframe>
 </div>
     </div>
     <div class="mid-col">
@@ -303,8 +308,16 @@
       
       <div class="article-info article-info-post">
         
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Hexo教程/">Hexo教程</a>
+    </div>
+
 
         
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+    </div>
+
         <div class="clearfix"></div>
       </div>
       
@@ -312,7 +325,9 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        
+        <p><excerpt in="" index="" |="" 首页摘要=""><br><a id="more"></a></excerpt></p>
+<the rest="" of="" contents="" |="" 余下全文="">
+</the>
       
     </div>
     
@@ -323,7 +338,7 @@
         <p><span>本文标题:</span><a href="/2019/01/03/first-blog/">first blog!</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">dailn</a></p>
         <p><span>发布时间:</span>2019-01-03, 21:19:15</p>
-        <p><span>最后更新:</span>2019-01-03, 21:19:15</p>
+        <p><span>最后更新:</span>2019-01-06, 01:29:23</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/01/03/first-blog/" title="first blog!">http://yoursite.com/2019/01/03/first-blog/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/01/03/first-blog/　　作者: dailn" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -340,7 +355,7 @@
         
             <div id="article-nav-newer" class="article-nav-title">
                 <a href="/2019/01/03/Spring Cloud 服务注册和发现/">
-                    
+                    Spring Cloud 服务注册和发现
                 </a>
             </div>
         
@@ -437,7 +452,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2019/01/03/Spring Cloud 服务注册和发现/" title="上一篇: ">
+            <a href="/2019/01/03/Spring Cloud 服务注册和发现/" title="上一篇: Spring Cloud 服务注册和发现">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -491,7 +506,26 @@
             </div>
         
     </div>
+	
+	<span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+		<script>
+			var now = new Date(); 
+			function createtime() { 
+				var grt= new Date("01/01/2019 12:49:00");//此处修改你的建站时间或者网站上线时间 
+				now.setTime(now.getTime()+250); 
+				days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+				hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+				if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+				mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+				seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+				snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+				document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 "; 
+				document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+			} 
+		setInterval("createtime()",250);
+		</script>
 </footer>
+
     </div>
     
 <script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
@@ -545,6 +579,11 @@
 
 <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
   </div>
-</body>
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>
+
+<script type="text/javascript" src="/js/snow.js"></script>
+
