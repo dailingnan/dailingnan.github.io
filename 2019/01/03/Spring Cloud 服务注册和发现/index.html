@@ -20,15 +20,15 @@
 <meta property="og:url" content="http://yoursite.com/2019/01/03/Spring Cloud 服务注册和发现/index.html">
 <meta property="og:site_name" content="戴岭南的个人博客">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="c:/Users/admin/AppData/Roaming/Typora/typora-user-images/1546138557820.png">
-<meta property="og:image" content="c:/Users/admin/AppData/Roaming/Typora/typora-user-images/1546140044542.png">
-<meta property="og:image" content="c:/Users/admin/AppData/Roaming/Typora/typora-user-images/1546155275439.png">
-<meta property="og:image" content="c:/Users/admin/AppData/Roaming/Typora/typora-user-images/1546155354052.png">
-<meta property="og:image" content="c:/Users/admin/AppData/Roaming/Typora/typora-user-images/1546156122709.png">
-<meta property="og:updated_time" content="2019-01-06T07:13:39.750Z">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/4EE2AE653A204BB2B2783BEACB5A9FC1?method=download&shareKey=f31e9676db8abd1d5125205013abf48e">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/B63449D6D39E4469A01BDCE88F0148F7?method=download&shareKey=e74937594dd8cb1ea71962253a45296f">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/9822EBC60FC94E7185258F79D734E298?method=download&shareKey=01a71f78fc63ba692c76bdd0a0186503">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/73F1E72382944D98810A2298F2DC37FC?method=download&shareKey=087e4f6a8366a6db77aab45c89b1a9c1">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/1D969E4A75BC4A0F92CEFFA3A41C810E?method=download&shareKey=62d1b8caf282b53132809708ebd18315">
+<meta property="og:updated_time" content="2019-01-06T07:53:07.572Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Cloud 服务注册和发现">
-<meta name="twitter:image" content="c:/Users/admin/AppData/Roaming/Typora/typora-user-images/1546138557820.png">
+<meta name="twitter:image" content="https://note.youdao.com/yws/api/personal/file/4EE2AE653A204BB2B2783BEACB5A9FC1?method=download&shareKey=f31e9676db8abd1d5125205013abf48e">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -337,7 +337,7 @@
 <h3 id="修改启动类"><a href="#修改启动类" class="headerlink" title="修改启动类"></a>修改启动类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableEurekaServer</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EurekaApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">      SpringApplication.run(EurekaApplication.class, args);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>导入依赖后，只需要在启动上面加上<strong>@EnableEurekaServer</strong>注解就可以了</p>
 <h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>直接启动应用，然后访问<a href="http://localhost:1111/就能看到注册中心的界面" target="_blank" rel="noopener">http://localhost:1111/就能看到注册中心的界面</a></p>
-<p><img src="C:\Users\admin\AppData\Roaming\Typora\typora-user-images\1546138557820.png" alt="1546138557820"></p>
+<p><img src="https://note.youdao.com/yws/api/personal/file/4EE2AE653A204BB2B2783BEACB5A9FC1?method=download&amp;shareKey=f31e9676db8abd1d5125205013abf48e" alt="1546138557820"></p>
 <p>此时可以看到实例列表是没有实例的，接下来我们注册一个客户端上去</p>
 <h2 id="搭建Eureka客户端"><a href="#搭建Eureka客户端" class="headerlink" title="搭建Eureka客户端"></a>搭建Eureka客户端</h2><h3 id="导入maven依赖-1"><a href="#导入maven依赖-1" class="headerlink" title="导入maven依赖"></a>导入maven依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">   &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">   &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-client&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
 <h3 id="修改配置文件-1"><a href="#修改配置文件-1" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">spring.application.name=consumer</span><br><span class="line">server.port=1112</span><br><span class="line">#指定注册中心的地址</span><br><span class="line">eureka.client.serviceUrl.defaultZone=http://localhost:1111/eureka/</span><br></pre></td></tr></table></figure>
@@ -345,18 +345,18 @@
 <h3 id="修改启动类-1"><a href="#修改启动类-1" class="headerlink" title="修改启动类"></a>修改启动类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableDiscoveryClient</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EurekaClientApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">      SpringApplication.run(EurekaClientApplication.class, args);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这里只需要加上<strong>@EnableDiscoveryClient</strong>注解就可以了</p>
 <h3 id="启动-1"><a href="#启动-1" class="headerlink" title="启动"></a>启动</h3><p>启动Eureka客户端后，我们再次查看注册中心就能发现我们的客户端实例注册上去了</p>
-<p><img src="C:\Users\admin\AppData\Roaming\Typora\typora-user-images\1546140044542.png" alt="1546140044542"></p>
+<p><img src="https://note.youdao.com/yws/api/personal/file/B63449D6D39E4469A01BDCE88F0148F7?method=download&amp;shareKey=e74937594dd8cb1ea71962253a45296f" alt="1546140044542"></p>
 <h2 id="Eureka-Server增加安全用户认证"><a href="#Eureka-Server增加安全用户认证" class="headerlink" title="Eureka Server增加安全用户认证"></a>Eureka Server增加安全用户认证</h2><p>在使用Eureka Server的时候，我们直接访问注册中心的页面就能看到所有的实例信息，在生产环境这样肯定是不安全的，不仅如此，我们把Eureka Client注册上去也不需要认证，用户只要知道地址就能达到把自己的服务伪装成同名服务注册上去，这也是很不安全的，Erueka Server对此提供了安全用户认证。</p>
 <h3 id="配置访问用户名和密码"><a href="#配置访问用户名和密码" class="headerlink" title="配置访问用户名和密码"></a>配置访问用户名和密码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#添加HTTP basic基本验证</span><br><span class="line">security:</span><br><span class="line">  basic:</span><br><span class="line">    enabled: true</span><br><span class="line">  user:</span><br><span class="line">    name: dailn</span><br><span class="line">    password: dailn!123</span><br></pre></td></tr></table></figure>
 <p>首先我们需要开启安全校验，然后配置用户名和密码</p>
-<h4 id="访问注册中心管理页面"><a href="#访问注册中心管理页面" class="headerlink" title="访问注册中心管理页面"></a>访问注册中心管理页面</h4><p><img src="C:\Users\admin\AppData\Roaming\Typora\typora-user-images\1546155275439.png" alt="1546155275439"></p>
+<h4 id="访问注册中心管理页面"><a href="#访问注册中心管理页面" class="headerlink" title="访问注册中心管理页面"></a>访问注册中心管理页面</h4><p><img src="https://note.youdao.com/yws/api/personal/file/9822EBC60FC94E7185258F79D734E298?method=download&amp;shareKey=01a71f78fc63ba692c76bdd0a0186503" alt="1546155275439"></p>
 <p>可以看到，这里就需要校验用户和密码了，只有校验通过才能访问注册中心管理页面</p>
-<p><img src="C:\Users\admin\AppData\Roaming\Typora\typora-user-images\1546155354052.png" alt="1546155354052"></p>
+<p><img src="https://note.youdao.com/yws/api/personal/file/73F1E72382944D98810A2298F2DC37FC?method=download&amp;shareKey=087e4f6a8366a6db77aab45c89b1a9c1" alt="1546155354052"></p>
 <h4 id="客户端再次注册"><a href="#客户端再次注册" class="headerlink" title="客户端再次注册"></a>客户端再次注册</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server</span><br></pre></td></tr></table></figure>
 <p>增加了安全认证后，客户端就注册不上去了，此时我们需要在客户端注册的时候也加上安全认证</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">eureka.client.security.basic.user=dailn</span><br><span class="line">eureka.client.security.basic.password=dailn!123</span><br><span class="line">eureka.client.serviceUrl.defaultZone=http://$&#123;eureka.client.security.basic.user&#125;:$&#123;eureka.client.security.basic.password&#125;@localhost:1111/eureka/</span><br></pre></td></tr></table></figure>
 <p>重新启动就能注册成功，在注册中心管理界面也能看到实例了</p>
-<p><img src="C:\Users\admin\AppData\Roaming\Typora\typora-user-images\1546156122709.png" alt="1546156122709"></p>
+<p><img src="https://note.youdao.com/yws/api/personal/file/1D969E4A75BC4A0F92CEFFA3A41C810E?method=download&amp;shareKey=62d1b8caf282b53132809708ebd18315" alt="1546156122709"></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这一篇文章我们简单的学习下服务的注册和发现，只需要导入相关的依赖，修改配置文件和启动类就可以了，最后为了安全起见还给Erureka Server增加了安全认证，下一篇文章在介绍服务端如何实现高可用。</p>
 </the>
       
@@ -369,7 +369,7 @@
         <p><span>本文标题:</span><a href="/2019/01/03/Spring Cloud 服务注册和发现/">Spring Cloud 服务注册和发现</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">dailn</a></p>
         <p><span>发布时间:</span>2019-01-03, 22:02:24</p>
-        <p><span>最后更新:</span>2019-01-06, 15:13:39</p>
+        <p><span>最后更新:</span>2019-01-06, 15:53:07</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/01/03/Spring Cloud 服务注册和发现/" title="Spring Cloud 服务注册和发现">http://yoursite.com/2019/01/03/Spring Cloud 服务注册和发现/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/01/03/Spring Cloud 服务注册和发现/　　作者: dailn" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
