@@ -15,18 +15,26 @@
 
 
 
-<meta name="description" content="背景​    在多线程中，我们使用加锁机制来确保线程安全，但如果使用不当，则可能导致死锁。JVM解决死锁问题方面，并不像数据库服务那么强大（数据库系统设计中考虑了检测死锁以及从死锁中恢复），当一组Java线程发生死锁时，”游戏”到此结束，这些线程永远不能再使用了。">
+<meta name="description" content="场景​    在多线程并发编程中synchronized一直是元老级角色，作为最基本的互斥手段，很多人都会称呼它为重量级锁。">
 <meta name="keywords" content="Java,并发,多线程">
 <meta property="og:type" content="article">
-<meta property="og:title" content="啃透Java并发之死锁篇">
-<meta property="og:url" content="http://yoursite.com/2019/01/06/啃透Java并发之死锁篇/index.html">
+<meta property="og:title" content="啃透Java并发之synchronized篇">
+<meta property="og:url" content="http://yoursite.com/2019/01/06/啃透Java并发之synchronized篇/index.html">
 <meta property="og:site_name" content="dailn的个人博客">
-<meta property="og:description" content="背景​    在多线程中，我们使用加锁机制来确保线程安全，但如果使用不当，则可能导致死锁。JVM解决死锁问题方面，并不像数据库服务那么强大（数据库系统设计中考虑了检测死锁以及从死锁中恢复），当一组Java线程发生死锁时，”游戏”到此结束，这些线程永远不能再使用了。">
+<meta property="og:description" content="场景​    在多线程并发编程中synchronized一直是元老级角色，作为最基本的互斥手段，很多人都会称呼它为重量级锁。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-06T11:50:51.150Z">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/F3FCF06284A546319B2A221C849D8160?method=download&shareKey=535b51a38fc4d87ad186508d41acecba">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/B5E03AFB41984EF6B6ED82EE7858CADA?method=download&shareKey=fb8e75d236242d46a6862f51fa1f61ec">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/FD9FC2F7B51D4F7FA65B6A04092A13CD?method=download&shareKey=acbd42755e2c33097fc0874e0285a21d">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/CA427DB098FC4FE2B82B5428A9B4DBE0?method=download&shareKey=4216427949f86592255052be40e66816">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/3008F51EE46C4F99B97F682415882E8B?method=download&shareKey=62f1b3f290919d0fd0ad53b150d311cb">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/9D14CE5A77DE4AFD86CF02066EB4C2CD?method=download&shareKey=fc0059533f96bdf61bfbabb68a1d1174">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/49197DF4552F4F71925C170CF20722AA?method=download&shareKey=f9673a97f495f7a06201dba8447111d6">
+<meta property="og:updated_time" content="2019-01-06T12:18:26.750Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="啃透Java并发之死锁篇">
-<meta name="twitter:description" content="背景​    在多线程中，我们使用加锁机制来确保线程安全，但如果使用不当，则可能导致死锁。JVM解决死锁问题方面，并不像数据库服务那么强大（数据库系统设计中考虑了检测死锁以及从死锁中恢复），当一组Java线程发生死锁时，”游戏”到此结束，这些线程永远不能再使用了。">
+<meta name="twitter:title" content="啃透Java并发之synchronized篇">
+<meta name="twitter:description" content="场景​    在多线程并发编程中synchronized一直是元老级角色，作为最基本的互斥手段，很多人都会称呼它为重量级锁。">
+<meta name="twitter:image" content="https://note.youdao.com/yws/api/personal/file/F3FCF06284A546319B2A221C849D8160?method=download&shareKey=535b51a38fc4d87ad186508d41acecba">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -58,7 +66,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>啃透Java并发之死锁篇 | dailn的个人博客</title>
+<title>啃透Java并发之synchronized篇 | dailn的个人博客</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -267,10 +275,10 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我">
 </nav>
-      <div class="body-wrap"><article id="post-啃透Java并发之死锁篇" class="article article-type-post" itemscope="" itemprop="blogPost">
+      <div class="body-wrap"><article id="post-啃透Java并发之synchronized篇" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2019/01/06/啃透Java并发之死锁篇/" class="article-date">
+      <a href="/2019/01/06/啃透Java并发之synchronized篇/" class="article-date">
       <time datetime="2019-01-06T09:13:43.000Z" itemprop="datePublished">2019-01-06</time>
 </a>
 
@@ -286,7 +294,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      啃透Java并发之死锁篇
+      啃透Java并发之synchronized篇
     </h1>
   
 
@@ -296,7 +304,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">989字</span>
+        <span class="post-count">2.8k字</span>
       </span>
     </span>
 
@@ -305,7 +313,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-hourglass-half"></i>
         <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">3分</span>
+        <span class="post-count">9分</span>
       </span>
     </span>
 </div>
@@ -335,30 +343,48 @@
           
         <excerpt in="" index="" |="" 首页摘要=""> 
 
-<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>​    在多线程中，我们使用加锁机制来确保线程安全，但如果使用不当，则可能导致死锁。JVM解决死锁问题方面，并不像数据库服务那么强大（数据库系统设计中考虑了检测死锁以及从死锁中恢复），当一组Java线程发生死锁时，”游戏”到此结束，这些线程永远不能再使用了。</p>
+<h1 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h1><p>​    在多线程并发编程中synchronized一直是元老级角色，作为最基本的互斥手段，很多人都会称呼它为重量级锁。</p>
 <a id="more"></a>
 <the rest="" of="" contents="" |="" 余下全文="">
 
-<h1 id="死锁的含义"><a href="#死锁的含义" class="headerlink" title="死锁的含义"></a>死锁的含义</h1><p>​    当线程A持有锁L并想获得锁M的同时，线程B持有锁M并尝试所得锁L，那么这两个线程将永远的等待下去，这种情况就是最简单的死锁。</p>
-<h1 id="死锁产生的四个必要条件"><a href="#死锁产生的四个必要条件" class="headerlink" title="死锁产生的四个必要条件"></a>死锁产生的四个必要条件</h1><ul>
-<li>互斥条件：进程要求对所分配的资源（如打印机）进行排他性控制，即在一段时间内某 资源仅为一个进程所占有。此时若有其他进程请求该资源，则请求进程只能等待。</li>
-<li>不剥夺条件：进程所获得的资源在未使用完毕之前，不能被其他进程强行夺走，即只能 由获得该资源的进程自己来释放（只能是主动释放)。</li>
-<li>请求和保持条件：进程已经保持了至少一个资源，但又提出了新的资源请求，而该资源 已被其他进程占有，此时请求进程被阻塞，但对自己已获得的资源保持不放。</li>
-<li>循环等待条件：存在一种进程资源的循环等待链，链中每一个进程已获得的资源同时被 链中下一个进程所请求。</li>
-</ul>
-<h1 id="死锁示例"><a href="#死锁示例" class="headerlink" title="死锁示例"></a>死锁示例</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.demo1.controller;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LockTest</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Object left= <span class="keyword">new</span> Object();</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Object right = <span class="keyword">new</span> Object();</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span>  <span class="title">test</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (left)&#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">                    System.out.println(<span class="string">"获得left锁"</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                System.out.println(<span class="string">"持有left锁，请求获取right"</span>);</span><br><span class="line">                <span class="keyword">synchronized</span> (right)&#123;</span><br><span class="line">                    System.out.println(<span class="string">"获取right成功"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">"left-right解锁完毕"</span>);</span><br><span class="line">        &#125;).start();</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (right)&#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">                    System.out.println(<span class="string">"获得right锁"</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                System.out.println(<span class="string">"持有right锁，请求获取left锁"</span>);</span><br><span class="line">                <span class="keyword">synchronized</span> (left)&#123;</span><br><span class="line">                    System.out.println(<span class="string">"成功获取left锁"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">"right-left解锁完毕"</span>);</span><br><span class="line">        &#125;).start();</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        LockTest lt = <span class="keyword">new</span> LockTest();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            lt.test();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>结果：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">获得right锁</span><br><span class="line">持有right锁，请求获取left锁</span><br><span class="line">获得left锁</span><br><span class="line">持有left锁，请求获取right</span><br></pre></td></tr></table></figure>
-<p>以上是一个简单的死锁例子，产生死锁的原因是因为两个线程试图以不同的顺序来获得相同的锁。如果按照相同的顺序来请求锁，那么就不会出现循环的加锁依赖性，因此就不会产生死锁。</p>
-<p>死锁一旦发生，在java中就只能中断程序了，所以我们需要在实际中避免死锁的发生。</p>
-<h1 id="死锁的避免"><a href="#死锁的避免" class="headerlink" title="死锁的避免"></a>死锁的避免</h1><ul>
-<li>加锁顺序：尽量让线程按照顺序加锁。</li>
-<li>加锁时限：尝试使用lock.trylock代替内置锁，当然只是在特定的场合（需要使用到定时锁，或者可中断锁的时候），否则应当优先使用内置锁，内置锁1.6优化后内置锁效率接近显示锁。</li>
-<li>加锁资源：避免一个线程在锁内同时占有多个资源，尽量保证每个锁只占有一个资源。</li>
-<li>加锁数量：避免一个线程同时获取多个锁（上面的例子就是一个线程获取两个锁），有需要时应该尽量缩小锁的范围，能用同步块加锁就不要用同步方法加锁。尽量使用开放调用（在调用某个方法时不需要持有锁，那么这种调用被称为开放调用）。</li>
-</ul>
-<hr>
-<p>感兴趣的朋友可以学习下银行家算法（避免死锁发生的著名算法）</p>
+<p>​    但是，随着Java SE 1.6对synchronized进行了各种优化之后，有些情况下它就并不那么重了。Java SE 1.6中为了减少获得锁和释放锁带来的性能消耗而引入的偏向锁和轻量级锁，以及锁的存储结构和升级过程。    </p>
+<h1 id="三种形式"><a href="#三种形式" class="headerlink" title="三种形式"></a>三种形式</h1><p>​    先来看下利用synchronized实现同步的基础：Java中的每一个对象都可以作为锁。具体表现为以下3种形式。 SE 1.6对synchronized进行了<strong>各种优化</strong>之后，有些情况下它就<strong>并不那么重</strong>了。Java SE 1.6中为了减少获得锁和释放锁带来的性能消耗而引入的偏向锁和轻量级锁，以及锁的存储结构和升级过程。</p>
+<ol>
+<li>对于普通同步方法，锁是当前实例对象。</li>
+<li>对于静态同步方法，锁是当前类的Class对象。</li>
+<li>对于同步方法块，锁是Synchonized括号里配置的对象。</li>
+</ol>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>​    synchronized关键字经过编译之后，会在同步块的前后分别形成<strong>monitorenter</strong>和<strong>monitorexit</strong>这两个字节码指令，这两个字节码都需要一个reference类型的参数来指明要锁定和解锁的对象。如果Java程序中的synchronized明确指定了对象参数，那就是这个对象的reference；如果没有明确指定，那就根据synchronized修饰的是实例方法还是类方法，去取对应的对象实例或Class对象来作为锁对象。</p>
+<p>​    monitorenter指令是在编译后插入到同步代码块的开始位置，而monitorexit是插入到方法结束处和异常处，JVM要保证每个monitorenter必须有对应的monitorexit与之配对。任何对象都有一个<strong>monitor</strong>与之关联，当且一个monitor被持有后，它将处于锁定状态。线程执行到monitorenter指令时，将会尝试获取对象所对应的monitor的所有权，即尝试获得对象的锁。</p>
+<p>​    在虚拟机规范对monitorenter和monitorexit的行为描述中，有两点是需要特别注意的。首先，synchronized同步块对同一条线程来说是<strong>可重入</strong>的，不会出现自己把自己锁死的问题。重入是通过锁的计数器来判断的，如果这个对象没被锁定，或者当前线程已经拥有了那个对象的锁，把锁的计数器加1，相应的，在执行monitorexit指令时会将锁计数器减1，当计数器为0时，锁就被释放。</p>
+<h1 id="synchronized-1-5与1-6优化后比较"><a href="#synchronized-1-5与1-6优化后比较" class="headerlink" title="synchronized  1.5与1.6优化后比较"></a>synchronized  1.5与1.6优化后比较</h1><p>​    在1.5引入重入锁后（ReentratLock），synchronized与之比较尤为显得相对重量级。synchronized在1.5之前是通过阻塞实现同步，每次必须获得锁然后执行操作，执行完毕释放锁。Java SE 1.6为了减少获得锁和释放锁带来的性能消耗，引入了“偏向锁”和“轻量级锁”，在Java SE 1.6中，锁一共有4种状态，级别从低到高依次是：<strong>无锁状态</strong>、<strong>偏向锁状态</strong>、<strong>轻量级锁状态</strong>和<strong>重量级锁</strong>状态，这几个状态会随着竞争情况逐渐升级。锁可以升级但不能降级，意味着偏向锁升级成轻量级锁后不能降级成偏向锁。这种<strong>锁升级却不能降级</strong>的策略，目的是为了提高获得锁和释放锁的效率。</p>
+<p>以下是通过跟ReentratLock对比，来体现synchrlnized优化后的效率提升。</p>
+<p><img src="https://note.youdao.com/yws/api/personal/file/F3FCF06284A546319B2A221C849D8160?method=download&amp;shareKey=535b51a38fc4d87ad186508d41acecba" alt=""></p>
+<h3 id="java对象头"><a href="#java对象头" class="headerlink" title="java对象头"></a>java对象头</h3><p>​     synchronized用的锁是存在Java对象头里的。如果对象是数组类型，则虚拟机用3个字宽（Word）存储对象头，如果对象是非数组类型，则用2字宽存储对象头。在32位虚拟机中，1字宽等于4字节，即32bit。具体如下图</p>
+<p><img src="https://note.youdao.com/yws/api/personal/file/B5E03AFB41984EF6B6ED82EE7858CADA?method=download&amp;shareKey=fb8e75d236242d46a6862f51fa1f61ec" alt=""></p>
+<p> java对象头的存取结构</p>
+<p><img src="https://note.youdao.com/yws/api/personal/file/FD9FC2F7B51D4F7FA65B6A04092A13CD?method=download&amp;shareKey=acbd42755e2c33097fc0874e0285a21d" alt=""></p>
+<p>在运行期间，Mark Word里存储的数据会随着锁标志位的变化而变化。Mark Word可能变化为存储以下4种数据。</p>
+<p><img src="https://note.youdao.com/yws/api/personal/file/CA427DB098FC4FE2B82B5428A9B4DBE0?method=download&amp;shareKey=4216427949f86592255052be40e66816" alt=""></p>
+<h3 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h3><p>​    互斥同步对性能最大的影响是阻塞的实现，在多线程程序中，当线程调度临时挂起活跃线程并转而运行另一个线程时，就会频繁的出现上下文切换操作，这种操作带来极大的开销（挂起线程和恢复线程都需要转入内核态中完成），保存和恢复上下文，丢失局部性，并且cpu时间将更多地花在线程调度而不是线程运行上面。</p>
+<pre><code>虚拟机的开发团队也注意到在许多应用上，共享数据的锁定状态只会持续很短的一段时间，为了这段时间去挂起和恢复线程并不值得。如果物理机器有一个以上的处理器，能让两个或以上的线程同时并行执行，我们就可以让后面请求锁的那个线程“稍等一下”，但不放弃处理器的执行时间，看看持有锁的线程是否很快就会释放锁。为了让线程等待，我们只需让线程执行一个忙循环（自旋），这项技术就是所谓的自旋锁。
+</code></pre><p>​     自旋等待不能代替阻塞，且先不说对处理器数量的要求，自旋等待本身虽然避免了线程切换的开销，但它是要占用处理器时间的，因此，如果锁被占用的时间很短，自旋等待的效果就会非常好，反之，如果锁被占用的时间很长，那么自旋的线程只会白白消耗处理器资源，而不会做任何有用的工作，反而会带来性能上的浪费。因此，自旋等待的时间必须要有一定的限度，如果自旋超过了限定的次数仍然没有成功获得锁，就应当使用传统的方式去挂起线程了。自旋次数的默认值是10次，用户可以使用参数-XX：PreBlockSpin来更改。</p>
+<h3 id="自适应自旋锁"><a href="#自适应自旋锁" class="headerlink" title="自适应自旋锁"></a>自适应自旋锁</h3><p>​    自适应意味着自旋的时间不再固定了，而是由前一次在同一个锁上的自旋时间及锁的拥有者的状态来决定。如果在同一个锁对象上，自旋等待刚刚成功获得过锁，并且持有锁的线程正在运行中，那么虚拟机就会认为这次自旋也很有可能再次成功，进而它将允许自旋等待持续相对更长的时间，比如100个循环。另外，如果对于某个锁，自旋很少成功获得过，那在以后要获取这个锁时将可能省略掉自旋过程，以避免浪费处理器资源。有了自适应自旋，随着程序运行和性能监控信息的不断完善，虚拟机对程序锁的状况预测就会越来越准确，虚拟机就会变得越来越“聪明”了。</p>
+<h3 id="偏向锁"><a href="#偏向锁" class="headerlink" title="偏向锁"></a>偏向锁</h3><p>​    锁不仅不存在多线程竞争，而且总是由同一线程多次获得，为了让线程获得锁的代价更低而引入了偏向锁。当一个线程访问同步块并获取锁时，会在对象头和栈帧中的锁记录里存储锁偏向的线程ID，以后该线程在进入和退出同步块时不需要进行CAS操作来加锁和解锁，只需简单地测试一下对象头的Mark。</p>
+<p>偏向锁的撤销：</p>
+<p>​    偏向锁使用了一种等到竞争出现才释放锁的机制，所以当其他线程尝试竞争偏向锁时，持有偏向锁的线程才会释放锁。偏向锁的撤销，需要等待全局安全点（在这个时间点上没有正在执行的字节码）。它会首先暂停拥有偏向锁的线程，然后检查持有偏向锁的线程是否活着，如果线程不处于活动状态，则将对象头设置成无锁状态；如果线程仍然活着，拥有偏向锁的栈会被执行，遍历偏向对象的锁记录，栈中的锁记录和对象头的Mark。</p>
+<p><img src="https://note.youdao.com/yws/api/personal/file/3008F51EE46C4F99B97F682415882E8B?method=download&amp;shareKey=62f1b3f290919d0fd0ad53b150d311cb" alt=""></p>
+<p>偏向锁在Java 6和Java 7里是默认启用的，但是它在应用程序启动几秒钟之后才激活，如有必要可以使用JVM参数来关闭延迟：-XX:BiasedLockingStartupDelay=0。如果你确定应用程序里所有的锁通常情况下处于竞争状态，可以通过JVM参数关闭偏向锁：-XX:-UseBiasedLocking=false，那么程序默认会进入轻量级锁状态。</p>
+<h3 id="轻量级锁"><a href="#轻量级锁" class="headerlink" title="轻量级锁"></a>轻量级锁</h3><h4 id="轻量级锁加锁"><a href="#轻量级锁加锁" class="headerlink" title="轻量级锁加锁"></a>轻量级锁加锁</h4><pre><code>线程在执行同步块之前，JVM会先在当前线程的栈桢中创建用于存储锁记录的空间，并将对象头中的Mark Word复制到锁记录中，官方称为Displaced Mark Word。然后线程尝试使用CAS将对象头中的Mark Word替换为指向锁记录的指针。如果成功，当前线程获得锁，如果失败，表示其他线程竞争锁，当前线程便尝试使用自旋来获取锁。
+</code></pre><h4 id="轻量级锁解锁"><a href="#轻量级锁解锁" class="headerlink" title="轻量级锁解锁"></a>轻量级锁解锁</h4><p>​    Word替换回到对象头，如果成功，则表示没有竞争发生。如果失败，表示当前锁存在竞争，锁就会膨胀成重量级锁。下图是两个线程同时争夺锁，导致锁膨胀的流程图。</p>
+<p><img src="https://note.youdao.com/yws/api/personal/file/9D14CE5A77DE4AFD86CF02066EB4C2CD?method=download&amp;shareKey=fc0059533f96bdf61bfbabb68a1d1174" alt=""></p>
+<p>因为自旋会消耗CPU，为了避免无用的自旋（比如获得锁的线程被阻塞住了），一旦锁升级成重量级锁，就不会再恢复到轻量级锁状态。当锁处于这个状态下，其他线程试图获取锁时，都会被阻塞住，当持有锁的线程释放锁之后会唤醒这些线程，被唤醒的线程就会进行新一轮的夺锁之争。</p>
+<h4 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h4><ol>
+<li>轻量级锁并不是用来代替重量级锁的，它的本意是在没有多线程竞争的前提下，减少传统的重量级锁使用操作系统互斥量产生的性能消耗。</li>
+<li>轻量级在升级成重量级锁之前会先进行一定的自旋（自适应自旋），自旋拿到锁了就能避免线程上下文切换带来的额外开销。但是在一定次数的自旋还没拿到锁就会升级成重量级锁，后续线程堵塞。直到持有锁的线程释放锁唤醒其他线程，被唤醒的线程开启新的夺锁之争。</li>
+</ol>
+<h3 id="锁的优缺点对比"><a href="#锁的优缺点对比" class="headerlink" title="锁的优缺点对比"></a>锁的优缺点对比</h3><p><img src="https://note.youdao.com/yws/api/personal/file/49197DF4552F4F71925C170CF20722AA?method=download&amp;shareKey=f9673a97f495f7a06201dba8447111d6" alt=""></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>​    看完上面各种锁的区别，现在应该可以理解为什么锁只能升级不能降级了（偏向锁状态可以被重置为无锁状态。），各种锁都有各种锁的应用场景，虽然实际场景中不用我们控制，但是理解synchronized的实现原理，对我们实际的开发也是有很大帮助的。</p>
 </the></excerpt>
       
     </div>
@@ -367,13 +393,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2019/01/06/啃透Java并发之死锁篇/">啃透Java并发之死锁篇</a></p>
+        <p><span>本文标题:</span><a href="/2019/01/06/啃透Java并发之synchronized篇/">啃透Java并发之synchronized篇</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">dailn</a></p>
         <p><span>发布时间:</span>2019-01-06, 17:13:43</p>
-        <p><span>最后更新:</span>2019-01-06, 19:50:51</p>
+        <p><span>最后更新:</span>2019-01-06, 20:18:26</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2019/01/06/啃透Java并发之死锁篇/" title="啃透Java并发之死锁篇">http://yoursite.com/2019/01/06/啃透Java并发之死锁篇/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/01/06/啃透Java并发之死锁篇/　　作者: dailn" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2019/01/06/啃透Java并发之synchronized篇/" title="啃透Java并发之synchronized篇">http://yoursite.com/2019/01/06/啃透Java并发之synchronized篇/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/01/06/啃透Java并发之synchronized篇/　　作者: dailn" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -385,10 +411,16 @@
 
     <nav id="article-nav">
         
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2019/01/06/啃透Java并发之死锁篇/">
+                    啃透Java并发之死锁篇
+                </a>
+            </div>
+        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2019/01/06/啃透Java并发之synchronized篇/">
-                    啃透Java并发之synchronized篇
+                <a href="/2019/01/06/啃透Java并发之内存模型篇/">
+                    啃透Java并发之内存模型篇
                 </a>
             </div>
         
@@ -400,7 +432,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#死锁的含义"><span class="toc-number">2.</span> <span class="toc-text">死锁的含义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#死锁产生的四个必要条件"><span class="toc-number">3.</span> <span class="toc-text">死锁产生的四个必要条件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#死锁示例"><span class="toc-number">4.</span> <span class="toc-text">死锁示例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#死锁的避免"><span class="toc-number">5.</span> <span class="toc-text">死锁的避免</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#场景"><span class="toc-number">1.</span> <span class="toc-text">场景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#三种形式"><span class="toc-number">2.</span> <span class="toc-text">三种形式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实现原理"><span class="toc-number">3.</span> <span class="toc-text">实现原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#synchronized-1-5与1-6优化后比较"><span class="toc-number">4.</span> <span class="toc-text">synchronized  1.5与1.6优化后比较</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#java对象头"><span class="toc-number">4.0.1.</span> <span class="toc-text">java对象头</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自旋锁"><span class="toc-number">4.0.2.</span> <span class="toc-text">自旋锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自适应自旋锁"><span class="toc-number">4.0.3.</span> <span class="toc-text">自适应自旋锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#偏向锁"><span class="toc-number">4.0.4.</span> <span class="toc-text">偏向锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#轻量级锁"><span class="toc-number">4.0.5.</span> <span class="toc-text">轻量级锁</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#轻量级锁加锁"><span class="toc-number">4.0.5.1.</span> <span class="toc-text">轻量级锁加锁</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#轻量级锁解锁"><span class="toc-number">4.0.5.2.</span> <span class="toc-text">轻量级锁解锁</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#补充"><span class="toc-number">4.0.5.3.</span> <span class="toc-text">补充</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#锁的优缺点对比"><span class="toc-number">4.0.6.</span> <span class="toc-text">锁的优缺点对比</span></a></li></ol></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li>
         
     </div>
     <style>
@@ -436,7 +468,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"啃透Java并发之死锁篇　| dailn的个人博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"啃透Java并发之synchronized篇　| dailn的个人博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -478,13 +510,15 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+            <a href="/2019/01/06/啃透Java并发之死锁篇/" title="上一篇: 啃透Java并发之死锁篇">
+                <i class="fa fa-angle-left"></i>
+            </a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2019/01/06/啃透Java并发之synchronized篇/" title="下一篇: 啃透Java并发之synchronized篇">
+            <a href="/2019/01/06/啃透Java并发之内存模型篇/" title="下一篇: 啃透Java并发之内存模型篇">
                 <i class="fa fa-angle-right"></i>
             </a>
         
