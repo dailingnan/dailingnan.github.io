@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="dailn">
+
+
+
+<meta name="description" content="Spring Cloud 服务注册和发现搭建服务注册中心">
+<meta name="keywords" content="微服务,Spring Cloud">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Cloud 服务注册和发现">
+<meta property="og:url" content="http://yoursite.com/2019/01/01/Spring Cloud 服务注册和发现/index.html">
+<meta property="og:site_name" content="dailn的个人博客">
+<meta property="og:description" content="Spring Cloud 服务注册和发现搭建服务注册中心">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/4EE2AE653A204BB2B2783BEACB5A9FC1?method=download&shareKey=f31e9676db8abd1d5125205013abf48e">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/B63449D6D39E4469A01BDCE88F0148F7?method=download&shareKey=e74937594dd8cb1ea71962253a45296f">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/9822EBC60FC94E7185258F79D734E298?method=download&shareKey=01a71f78fc63ba692c76bdd0a0186503">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/73F1E72382944D98810A2298F2DC37FC?method=download&shareKey=087e4f6a8366a6db77aab45c89b1a9c1">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/1D969E4A75BC4A0F92CEFFA3A41C810E?method=download&shareKey=62d1b8caf282b53132809708ebd18315">
+<meta property="og:updated_time" content="2019-01-06T08:58:46.935Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring Cloud 服务注册和发现">
+<meta name="twitter:description" content="Spring Cloud 服务注册和发现搭建服务注册中心">
+<meta name="twitter:image" content="https://note.youdao.com/yws/api/personal/file/4EE2AE653A204BB2B2783BEACB5A9FC1?method=download&shareKey=f31e9676db8abd1d5125205013abf48e">
+
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="dailn的个人博客" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Spring Cloud 服务注册和发现 | dailn的个人博客</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head></html>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">dailn</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="">
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class="no-result">No results found <i class="fa fa-spinner fa-pulse"></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa CSDN" href="https://blog.csdn.net/dailingnan0827" title="CSDN"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Cloud/">Spring Cloud</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/并发/">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微服务/">微服务</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于后端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">dailn</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">dailn</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="https://blog.csdn.net/dailingnan0827" title="CSDN"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我">
+</nav>
+      <div class="body-wrap"><article id="post-Spring Cloud 服务注册和发现" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/01/01/Spring Cloud 服务注册和发现/" class="article-date">
+      <time datetime="2019-01-01T13:19:15.000Z" itemprop="datePublished">2019-01-01</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Spring Cloud 服务注册和发现
+    </h1>
+  
+
+		
+			<div style="margin-top:10px;">
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text">  字数统计: </span>
+        <span class="post-count">1.1k字</span>
+      </span>
+    </span>
+
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text">  阅读时长: </span>
+        <span class="post-count">4分</span>
+      </span>
+    </span>
+</div>
+<br><br>
+		
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Spring-Cloud教程/">Spring Cloud教程</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring-Cloud/">Spring Cloud</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/微服务/">微服务</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <excerpt in="" index="" |="" 首页摘要=""> 
+
+
+<h1 id="Spring-Cloud-服务注册和发现"><a href="#Spring-Cloud-服务注册和发现" class="headerlink" title="Spring Cloud 服务注册和发现"></a>Spring Cloud 服务注册和发现</h1><h2 id="搭建服务注册中心"><a href="#搭建服务注册中心" class="headerlink" title="搭建服务注册中心"></a>搭建服务注册中心</h2><a id="more"></a>
+<the rest="" of="" contents="" |="" 余下全文="">
+
+<h3 id="导入maven依赖"><a href="#导入maven依赖" class="headerlink" title="导入maven依赖"></a>导入maven依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&lt;parent&gt;</span><br><span class="line">   &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">   &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</span><br><span class="line">   &lt;version&gt;1.5.19.BUILD-SNAPSHOT&lt;/version&gt;</span><br><span class="line">   &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;</span><br><span class="line">&lt;/parent&gt;</span><br><span class="line"></span><br><span class="line">&lt;properties&gt;</span><br><span class="line">		&lt;java.version&gt;1.8&lt;/java.version&gt;</span><br><span class="line">		&lt;spring-cloud.version&gt;Edgware.BUILD-SNAPSHOT&lt;/spring-cloud.version&gt;</span><br><span class="line">	&lt;/properties&gt;&lt;dependency&gt;</span><br><span class="line">   &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">   &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-server&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;properties&gt;</span><br><span class="line">		&lt;java.version&gt;1.8&lt;/java.version&gt;</span><br><span class="line">		&lt;spring-cloud.version&gt;Edgware.BUILD-SNAPSHOT&lt;/spring-cloud.version&gt;</span><br><span class="line">	&lt;/properties&gt;&lt;dependency&gt;</span><br><span class="line">   &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">   &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-server&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;dependencyManagement&gt;</span><br><span class="line">   &lt;dependencies&gt;</span><br><span class="line">      &lt;dependency&gt;</span><br><span class="line">         &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">         &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;</span><br><span class="line">         &lt;version&gt;$&#123;spring-cloud.version&#125;&lt;/version&gt;</span><br><span class="line">         &lt;type&gt;pom&lt;/type&gt;</span><br><span class="line">         &lt;scope&gt;import&lt;/scope&gt;</span><br><span class="line">      &lt;/dependency&gt;</span><br><span class="line">   &lt;/dependencies&gt;</span><br><span class="line">&lt;/dependencyManagement&gt;</span><br></pre></td></tr></table></figure>
+<p>可通过<strong>Spring Initializr</strong>选择<strong>Eureka Server</strong>模块生成，要注意下SpringBoot的版本，不同的版本对应不同的Spring Cloud版本，我这里用的是1.5.19。</p>
+<h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">server.port=1111</span><br><span class="line">eureka.instance.hostname=localhost</span><br><span class="line">#关闭向注册中心注册</span><br><span class="line">eureka.client.register-with-eureka=false</span><br><span class="line">#关闭从注册中心获取实例</span><br><span class="line">eureka.client.fetch-registry=false</span><br></pre></td></tr></table></figure>
+<p>由于本身就是服务端，所以不需要向注册中心注册自己本身，服务端的只要职责是维护服务实例，所以也不需要获取服务实例</p>
+<h3 id="修改启动类"><a href="#修改启动类" class="headerlink" title="修改启动类"></a>修改启动类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableEurekaServer</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EurekaApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">      SpringApplication.run(EurekaApplication.class, args);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>导入依赖后，只需要在启动上面加上<strong>@EnableEurekaServer</strong>注解就可以了</p>
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>直接启动应用，然后访问<a href="http://localhost:1111/就能看到注册中心的界面" target="_blank" rel="noopener">http://localhost:1111/就能看到注册中心的界面</a></p>
+<p><img src="https://note.youdao.com/yws/api/personal/file/4EE2AE653A204BB2B2783BEACB5A9FC1?method=download&amp;shareKey=f31e9676db8abd1d5125205013abf48e" alt="1546138557820"></p>
+<p>此时可以看到实例列表是没有实例的，接下来我们注册一个客户端上去</p>
+<h2 id="搭建Eureka客户端"><a href="#搭建Eureka客户端" class="headerlink" title="搭建Eureka客户端"></a>搭建Eureka客户端</h2><h3 id="导入maven依赖-1"><a href="#导入maven依赖-1" class="headerlink" title="导入maven依赖"></a>导入maven依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">   &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">   &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-client&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="修改配置文件-1"><a href="#修改配置文件-1" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">spring.application.name=consumer</span><br><span class="line">server.port=1112</span><br><span class="line">#指定注册中心的地址</span><br><span class="line">eureka.client.serviceUrl.defaultZone=http://localhost:1111/eureka/</span><br></pre></td></tr></table></figure>
+<p>这里只需要指定注册中心的地址就可以了</p>
+<h3 id="修改启动类-1"><a href="#修改启动类-1" class="headerlink" title="修改启动类"></a>修改启动类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableDiscoveryClient</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EurekaClientApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">      SpringApplication.run(EurekaClientApplication.class, args);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里只需要加上<strong>@EnableDiscoveryClient</strong>注解就可以了</p>
+<h3 id="启动-1"><a href="#启动-1" class="headerlink" title="启动"></a>启动</h3><p>启动Eureka客户端后，我们再次查看注册中心就能发现我们的客户端实例注册上去了</p>
+<p><img src="https://note.youdao.com/yws/api/personal/file/B63449D6D39E4469A01BDCE88F0148F7?method=download&amp;shareKey=e74937594dd8cb1ea71962253a45296f" alt="1546140044542"></p>
+<h2 id="Eureka-Server增加安全用户认证"><a href="#Eureka-Server增加安全用户认证" class="headerlink" title="Eureka Server增加安全用户认证"></a>Eureka Server增加安全用户认证</h2><p>在使用Eureka Server的时候，我们直接访问注册中心的页面就能看到所有的实例信息，在生产环境这样肯定是不安全的，不仅如此，我们把Eureka Client注册上去也不需要认证，用户只要知道地址就能达到把自己的服务伪装成同名服务注册上去，这也是很不安全的，Erueka Server对此提供了安全用户认证。</p>
+<h3 id="配置访问用户名和密码"><a href="#配置访问用户名和密码" class="headerlink" title="配置访问用户名和密码"></a>配置访问用户名和密码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#添加HTTP basic基本验证</span><br><span class="line">security:</span><br><span class="line">  basic:</span><br><span class="line">    enabled: true</span><br><span class="line">  user:</span><br><span class="line">    name: dailn</span><br><span class="line">    password: dailn!123</span><br></pre></td></tr></table></figure>
+<p>首先我们需要开启安全校验，然后配置用户名和密码</p>
+<h4 id="访问注册中心管理页面"><a href="#访问注册中心管理页面" class="headerlink" title="访问注册中心管理页面"></a>访问注册中心管理页面</h4><p><img src="https://note.youdao.com/yws/api/personal/file/9822EBC60FC94E7185258F79D734E298?method=download&amp;shareKey=01a71f78fc63ba692c76bdd0a0186503" alt="1546155275439"></p>
+<p>可以看到，这里就需要校验用户和密码了，只有校验通过才能访问注册中心管理页面</p>
+<p><img src="https://note.youdao.com/yws/api/personal/file/73F1E72382944D98810A2298F2DC37FC?method=download&amp;shareKey=087e4f6a8366a6db77aab45c89b1a9c1" alt="1546155354052"></p>
+<h4 id="客户端再次注册"><a href="#客户端再次注册" class="headerlink" title="客户端再次注册"></a>客户端再次注册</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server</span><br></pre></td></tr></table></figure>
+<p>增加了安全认证后，客户端就注册不上去了，此时我们需要在客户端注册的时候也加上安全认证</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">eureka.client.security.basic.user=dailn</span><br><span class="line">eureka.client.security.basic.password=dailn!123</span><br><span class="line">eureka.client.serviceUrl.defaultZone=http://$&#123;eureka.client.security.basic.user&#125;:$&#123;eureka.client.security.basic.password&#125;@localhost:1111/eureka/</span><br></pre></td></tr></table></figure>
+<p>重新启动就能注册成功，在注册中心管理界面也能看到实例了</p>
+<p><img src="https://note.youdao.com/yws/api/personal/file/1D969E4A75BC4A0F92CEFFA3A41C810E?method=download&amp;shareKey=62d1b8caf282b53132809708ebd18315" alt="1546156122709"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这一篇文章我们简单的学习下服务的注册和发现，只需要导入相关的依赖，修改配置文件和启动类就可以了，最后为了安全起见还给Erureka Server增加了安全认证，下一篇文章在介绍服务端如何实现高可用。</p>
+</the></excerpt>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2019/01/01/Spring Cloud 服务注册和发现/">Spring Cloud 服务注册和发现</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">dailn</a></p>
+        <p><span>发布时间:</span>2019-01-01, 21:19:15</p>
+        <p><span>最后更新:</span>2019-01-06, 16:58:46</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2019/01/01/Spring Cloud 服务注册和发现/" title="Spring Cloud 服务注册和发现">http://yoursite.com/2019/01/01/Spring Cloud 服务注册和发现/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/01/01/Spring Cloud 服务注册和发现/　　作者: dailn" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target="_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2019/01/01/Spring Cloud 服务端高可用/">
+                    Spring Cloud 服务端高可用
+                </a>
+            </div>
+        
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-Cloud-服务注册和发现"><span class="toc-number">1.</span> <span class="toc-text">Spring Cloud 服务注册和发现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#搭建服务注册中心"><span class="toc-number">1.1.</span> <span class="toc-text">搭建服务注册中心</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#导入maven依赖"><span class="toc-number">1.1.1.</span> <span class="toc-text">导入maven依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改配置文件"><span class="toc-number">1.1.2.</span> <span class="toc-text">修改配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改启动类"><span class="toc-number">1.1.3.</span> <span class="toc-text">修改启动类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#启动"><span class="toc-number">1.1.4.</span> <span class="toc-text">启动</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#搭建Eureka客户端"><span class="toc-number">1.2.</span> <span class="toc-text">搭建Eureka客户端</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#导入maven依赖-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">导入maven依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改配置文件-1"><span class="toc-number">1.2.2.</span> <span class="toc-text">修改配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改启动类-1"><span class="toc-number">1.2.3.</span> <span class="toc-text">修改启动类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#启动-1"><span class="toc-number">1.2.4.</span> <span class="toc-text">启动</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Eureka-Server增加安全用户认证"><span class="toc-number">1.3.</span> <span class="toc-text">Eureka Server增加安全用户认证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#配置访问用户名和密码"><span class="toc-number">1.3.1.</span> <span class="toc-text">配置访问用户名和密码</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#访问注册中心管理页面"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">访问注册中心管理页面</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#客户端再次注册"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">客户端再次注册</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.4.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"Spring Cloud 服务注册和发现　| dailn的个人博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+		<section class="livere" id="comments">
+    <!-- 来必力City版安装代码 -->
+	<div id="lv-container" data-id="city" data-uid="MTAyMC80MjAwMC8xODU0Nw==">
+		<script type="text/javascript">
+	   (function(d, s) {
+		   var j, e = d.getElementsByTagName(s)[0];
+
+		   if (typeof LivereTower === 'function') { return; }
+
+		   j = d.createElement(s);
+		   j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+		   j.async = true;
+
+		   e.parentNode.insertBefore(j, e);
+	   })(document, 'script');
+		</script>
+	<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+	</div>
+	<!-- City版安装代码已完成 -->
+</section>
+
+	
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2019/01/01/Spring Cloud 服务端高可用/" title="上一篇: Spring Cloud 服务端高可用">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之内存模型篇/">啃透Java并发之内存模型篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之死锁篇/">啃透Java并发之死锁篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/01/Spring Cloud Ribbon实现负载均衡/">Spring Cloud 负载均衡</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/01/Spring Cloud 服务端高可用/">Spring Cloud 服务端高可用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/01/Spring Cloud 服务注册和发现/">Spring Cloud 服务注册和发现</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2019 dailn
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style="display:none">
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style="display:none">
+                        <span id="page-visit" title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+	
+	<span id="busuanzi_container_site_pv">
+		本站总访问量<span id="busuanzi_value_site_pv"></span>次
+	</span>
+	
+	
+	<span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+		<script>
+			var now = new Date(); 
+			function createtime() { 
+				var grt= new Date("01/01/2019 12:49:00");//此处修改你的建站时间或者网站上线时间 
+				now.setTime(now.getTime()+250); 
+				days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+				hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+				if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+				mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+				seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+				snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+				document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 "; 
+				document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+			} 
+		setInterval("createtime()",250);
+		</script>
+		
+		
+		
+		
+		
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+		</script>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
+<script type="text/javascript" src="/js/snow.js"></script>
+
