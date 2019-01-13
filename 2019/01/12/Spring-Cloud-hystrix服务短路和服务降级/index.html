@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/3519EE73659A4214BCB89499BE607844?method=download&shareKey=787f4034707de377d1406d02f82524bc">
 <meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/C5DBC0CFE58D42E4AFBDE9196A955711?method=download&shareKey=6bfedc0d36f732ba7542031e9b63c5a5">
 <meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/3519EE73659A4214BCB89499BE607844?method=download&shareKey=787f4034707de377d1406d02f82524bc">
-<meta property="og:updated_time" content="2019-01-13T03:20:32.983Z">
+<meta property="og:updated_time" content="2019-01-13T03:22:47.353Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Cloud hystrix服务短路和服务降级">
 <meta name="twitter:description" content="Spring Cloud Hystrix实现服务短路和服务降级背景​    在微服务架构中，我们将系统拆分成了一个个的服务单元，各单元应用间通过服务注册与订阅的方式互相依赖。由于每个单元都在不同的进程中运行，依赖通过远程调用的方式执行，这样就有可能因为网络原因或是依赖服务自身问题出现调用故障或延迟，而这些问题会直接导致调用方的对外服务也出现延迟，若此时调用方的请求不断增加，最后就会出现因等待">
@@ -347,6 +347,9 @@
         <excerpt in="" index="" |="" 首页摘要=""> 
 
 <h1 id="Spring-Cloud-Hystrix实现服务短路和服务降级"><a href="#Spring-Cloud-Hystrix实现服务短路和服务降级" class="headerlink" title="Spring Cloud Hystrix实现服务短路和服务降级"></a>Spring Cloud Hystrix实现服务短路和服务降级</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>​    在微服务架构中，我们将系统拆分成了一个个的<strong>服务单元</strong>，各单元应用间通过服务注册与订阅的方式互相依赖。由于每个单元都在不同的进程中运行，依赖通过远程调用的方式执行，这样就有可能因为<strong>网络原因</strong>或是依赖<strong>服务自身问题</strong>出现调用故障或延迟，而这些问题会直接导致调用方的对外服务也出现延迟，若此时调用方的请求不断增加，最后就会出现因等待出现故障的依赖方响应而形成<strong>任务积压</strong>，线程资源无法释放，最终导致自身服务的<strong>瘫痪</strong>，进一步甚至出现故障的蔓延最终导致整个系统的瘫痪。如果这样的架构存在如此严重的隐患，那么相较传统架构就更加的不稳定。为了解决这样的问题，因此产生了<strong>断路器</strong>等一系列的服务保护机制。</p>
+<a id="more"></a>
+<the rest="" of="" contents="" |="" 余下全文="">
+
 <h2 id="断路器和服务降级"><a href="#断路器和服务降级" class="headerlink" title="断路器和服务降级"></a>断路器和服务降级</h2><h3 id="断路器（服务熔断）"><a href="#断路器（服务熔断）" class="headerlink" title="断路器（服务熔断）"></a>断路器（服务熔断）</h3><p>​    很多朋友一开始可能会把断路器和服务降级的概念搞混（表示一开始我也傻傻分不清），这两个其实不是同一个东西来的，断路器本身是一种开关装置，用于在电路上保护线路过载，当线路中有电器发生短路时，断路器能够及时切断故障电路、防止发生过载、发热甚至起火等严重后果。在微服务架构中，断路器的作用也是类似的，当某个服务单元发生故障（类似用电器发生短路）之后，通过断路器的故障监控，向调用方返回一个错误响应，而不是长时间的等待。这样就不会使得线程因服务调用故障服务被长时间占用不释放，避免了故障在分布式系统中的蔓延。</p>
 <h3 id="服务降级"><a href="#服务降级" class="headerlink" title="服务降级"></a>服务降级</h3><p>​    当某个服务出现故障了，在还没修复之前，请求进来肯定都是出错的，从系统整理负荷考虑，此时我们可以提供一种应急方案，主逻辑出错，此时应急方案（次逻辑）就被当成主逻辑调用，保证系统的正常运行。等服务主逻辑被修复了再切换回主逻辑，切换这个过程，可以人工干预，也可以是通过自动策略实现。降级本身也是一种策略，不仅仅应用在微服务中，在分布式系统架构中，会针对很多场景提供降级方案。这样能更好的保证系统的高可用性。</p>
 <h3 id="Spring-Cloud断路器和服务降级"><a href="#Spring-Cloud断路器和服务降级" class="headerlink" title="Spring Cloud断路器和服务降级"></a>Spring Cloud断路器和服务降级</h3><p>​    在Spring  Cloud中，断路器和服务降级是相辅相成的，通过Hystrix实现，当服务熔断后，可直接调用回调方法实现服务降级。同时Hystrix会从系统度量指标metrics中获取服务的健康状态，根据请求总数（QPS），错误百分比等信息，来调整断路器超时时间，某段时间内（休眠窗）使得原先需要2s（Hystrix默认超时时间）才能够触发熔断的逻辑不再有超时时间限制，直接调用降级方法（次逻辑）。相当于在一段时间内，当次逻辑当成主逻辑执行，不再执行主逻辑。一段时间后断路器将进入半开状态，释放一次请求到原来的主逻辑上，如果此次请求正常返回，那么断路器将继续闭合，主逻辑恢复，如果这次请求依然有问题，断路器继续进入打开状态，休眠时间窗重新计时。</p>
@@ -384,7 +387,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds=60000</span><br></pre></td></tr></table></figure>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过这篇文章，我们了解了服务熔断，服务降级。以及怎么在Spring Cloud中通过Hystix实现断路器和服务降级。</p>
 <p>其实Hystix除了实现断路器和服务降级，还可以用来缓存请求（不能跨请求缓存），请求合并等。。，以后有机会可以单独介绍。</p>
-</excerpt>
+</the></excerpt>
       
     </div>
     
@@ -395,7 +398,7 @@
         <p><span>本文标题:</span><a href="/2019/01/12/Spring-Cloud-hystrix服务短路和服务降级/">Spring Cloud hystrix服务短路和服务降级</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">dailn</a></p>
         <p><span>发布时间:</span>2019-01-12, 21:13:18</p>
-        <p><span>最后更新:</span>2019-01-13, 11:20:32</p>
+        <p><span>最后更新:</span>2019-01-13, 11:22:47</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/01/12/Spring-Cloud-hystrix服务短路和服务降级/" title="Spring Cloud hystrix服务短路和服务降级">http://yoursite.com/2019/01/12/Spring-Cloud-hystrix服务短路和服务降级/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/01/12/Spring-Cloud-hystrix服务短路和服务降级/　　作者: dailn" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
