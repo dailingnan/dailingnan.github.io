@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="dailn的个人博客">
 <meta property="og:description" content="redis主从架构​主从的优势​    单机的 redis，能够承载的 QPS 大概就在上万到几万不等。对于缓存来说，一般都是用来支撑读高并发的。因此架构做成主从(master-slave)架构，一主多从，主负责写，并且将数据复制到其它的 slave 节点，从节点负责读。所有的读请求全部走从节点。这样也可以很轻松实现水平扩容，支撑读高并发。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-20T17:45:21.311Z">
+<meta property="og:updated_time" content="2019-01-20T17:50:49.335Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redis深入学习之实现主从和哨兵">
 <meta name="twitter:description" content="redis主从架构​主从的优势​    单机的 redis，能够承载的 QPS 大概就在上万到几万不等。对于缓存来说，一般都是用来支撑读高并发的。因此架构做成主从(master-slave)架构，一主多从，主负责写，并且将数据复制到其它的 slave 节点，从节点负责读。所有的读请求全部走从节点。这样也可以很轻松实现水平扩容，支撑读高并发。">
@@ -375,7 +375,7 @@
 <figure class="highlight plain"><figcaption><span>-p 6380 -a 123456 ```连接6380客户端</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">```properties</span><br><span class="line"># Replication</span><br><span class="line">role:master</span><br><span class="line">connected_slaves:1</span><br><span class="line">slave1:ip=127.0.0.1,port=6379,state=online,offset=524289,lag=1</span><br><span class="line">master_repl_offset:524555</span><br><span class="line">repl_backlog_active:1</span><br><span class="line">repl_backlog_size:1048576</span><br><span class="line">repl_backlog_first_byte_offset:159</span><br><span class="line">repl_backlog_histlen:524397</span><br></pre></td></tr></table></figure>
 <p>可以看到6380此时已经是主节点了，通过sentinel，我们就已经实现了自动切换redis主从节点</p>
 <p>其实sentinel实现主节点切换是通过修改Redis配置文件的，此时我们再去查看redis-6380.conf配置文件，就会发现，之前的<code>slaveof 127.0.0.1 6381</code>配置已经不见了，同时redis-6379.conf的配置文件，已经由原先的<code>slaveof 127.0.0.1 6381</code>变成了<code>slaveof 127.0.0.1 6380</code>(在配置文件底部)</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过Redis主从和哨兵结合，我们就能在实现Redis并发量增加的同时保障了Redis的可用性，以及出现故障时能够实行故障转移。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过Redis主从和哨兵结合，我们就能在实现Redis并发量增加的同时保障了Redis的可用性，以及出现故障时能够自动实现故障转移。</p>
 <p>参考文章</p>
 </the></excerpt>
       
@@ -388,7 +388,7 @@
         <p><span>本文标题:</span><a href="/2019/01/21/redis深入学习之实现主动和哨兵/">redis深入学习之实现主从和哨兵</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">dailn</a></p>
         <p><span>发布时间:</span>2019-01-21, 01:41:26</p>
-        <p><span>最后更新:</span>2019-01-21, 01:45:21</p>
+        <p><span>最后更新:</span>2019-01-21, 01:50:49</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/01/21/redis深入学习之实现主动和哨兵/" title="redis深入学习之实现主从和哨兵">http://yoursite.com/2019/01/21/redis深入学习之实现主动和哨兵/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/01/21/redis深入学习之实现主动和哨兵/　　作者: dailn" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
