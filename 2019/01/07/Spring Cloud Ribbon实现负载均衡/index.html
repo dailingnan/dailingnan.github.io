@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/172094B19A6B4745BFE6C4A19631F388?method=download&shareKey=e7d1548b174fd31e4faa03d3a57c6dee">
 <meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/0D621A1B9C644A6B9526EC004E443DAA?method=download&shareKey=c3d0120af54ce25309ee252bed77bd06">
 <meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/83021B247CD840CF845578707889C1EF?method=download&shareKey=85a84d74e8495724c34f61f86d9cdd61">
-<meta property="og:updated_time" content="2019-01-07T13:21:38.115Z">
+<meta property="og:updated_time" content="2019-01-20T17:46:37.264Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Cloud 负载均衡">
 <meta name="twitter:description" content="Spring Cloud Ribbon实现负载均衡负载均衡负载均衡在系统架构中是一个非常重要的角色，在前面大型网站架构学习总结中，可以看到，高可用，伸缩性，性能几个架构要素中，负载均衡都有着很重要的地位，是系统压力缓解，系统扩容的重要手段之一。">
@@ -196,7 +196,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Cloud/">Spring Cloud</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/个人博客/">个人博客</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/并发/">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微服务/">微服务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技巧/">技巧</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/">Redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Cloud/">Spring Cloud</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/个人博客/">个人博客</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/并发/">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微服务/">微服务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微缓存/">微缓存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技巧/">技巧</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
                     </div>
                 </section>
                 
@@ -341,9 +341,11 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p><excerpt in="" index="" |="" 首页摘要=""> </excerpt></p>
+        <excerpt in="" index="" |="" 首页摘要=""> 
+
 <h1 id="Spring-Cloud-Ribbon实现负载均衡"><a href="#Spring-Cloud-Ribbon实现负载均衡" class="headerlink" title="Spring Cloud Ribbon实现负载均衡"></a>Spring Cloud Ribbon实现负载均衡</h1><h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><p>负载均衡在系统架构中是一个非常重要的角色，在前面大型网站架构学习总结中，可以看到，高可用，伸缩性，性能几个架构要素中，负载均衡都有着很重要的地位，是系统压力缓解，系统扩容的重要手段之一。<br><a id="more"></a></p>
-<p><the rest="" of="" contents="" |="" 余下全文=""></the></p>
+<the rest="" of="" contents="" |="" 余下全文="">
+
 <h3 id="服务端负载"><a href="#服务端负载" class="headerlink" title="服务端负载"></a>服务端负载</h3><p>一般来说，我们讲的负载均衡都是讲服务端负载均衡（不论硬负载还是软负载），比较常见的通过Nginx反向代理来实现负载均衡，例如下面图中所示</p>
 <p><img src="https://note.youdao.com/yws/api/personal/file/172094B19A6B4745BFE6C4A19631F388?method=download&amp;shareKey=e7d1548b174fd31e4faa03d3a57c6dee" alt="1546179423387"></p>
 <h3 id="客户端负载均衡"><a href="#客户端负载均衡" class="headerlink" title="客户端负载均衡"></a>客户端负载均衡</h3><p>这次我们所用到的Ribbon其实就是一种客户端负载均衡，与服务端负载均衡不同的是，客户端负载均衡不是通过一个统一的均衡器（Nginx）去均衡的，而是每一个客户端都维护着各自的负载均衡实现，例如下图所示</p>
@@ -382,7 +384,9 @@
 <li>重试实现：RetryRule 对内部定义的策略反复尝试</li>
 </ul>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>Eureka 整合Ribbon后，通过RestTemplate以服务名访问的方式调用就能实现负载均衡，我们不需要关注各应用的ip、端口，这些信息Ribbon都能从Eureka Server的服务列表获取到，在此基础上，实现Ribbon还是挺方便的。</p>
-
+<p>参考书籍《Redis 实战》</p>
+<p>参考文章 <a href="https://juejin.im/book/5afc2e5f6fb9a07a9b362527/section/5afc2e5f51882542714ff291" target="_blank" rel="noopener">Redis 基础数据结构</a></p>
+</the></excerpt>
       
     </div>
     
@@ -393,7 +397,7 @@
         <p><span>本文标题:</span><a href="/2019/01/07/Spring Cloud Ribbon实现负载均衡/">Spring Cloud 负载均衡</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">dailn</a></p>
         <p><span>发布时间:</span>2019-01-07, 21:19:15</p>
-        <p><span>最后更新:</span>2019-01-07, 21:21:38</p>
+        <p><span>最后更新:</span>2019-01-21, 01:46:37</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/01/07/Spring Cloud Ribbon实现负载均衡/" title="Spring Cloud 负载均衡">http://yoursite.com/2019/01/07/Spring Cloud Ribbon实现负载均衡/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/01/07/Spring Cloud Ribbon实现负载均衡/　　作者: dailn" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -416,8 +420,8 @@
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2019/01/07/Spring Cloud 服务注册和发现/">
-                    Spring Cloud 服务注册和发现
+                <a href="/2019/01/07/Spring Cloud 服务端高可用/">
+                    Spring Cloud 服务端高可用
                 </a>
             </div>
         
@@ -515,13 +519,13 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2019/01/07/Spring Cloud 服务注册和发现/" title="下一篇: Spring Cloud 服务注册和发现">
+            <a href="/2019/01/07/Spring Cloud 服务端高可用/" title="下一篇: Spring Cloud 服务端高可用">
                 <i class="fa fa-angle-right"></i>
             </a>
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/01/13/markdown插入本地图片小策略/">markdown插入本地图片小技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/12/Spring-Cloud-hystrix服务短路和服务降级/">Spring Cloud hystrix服务短路和服务降级</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/使用Hexo搭建个人博客/">使用Hexo搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Spring Cloud Ribbon实现负载均衡/">Spring Cloud 负载均衡</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Spring Cloud 服务注册和发现/">Spring Cloud 服务注册和发现</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Spring Cloud 服务端高可用/">Spring Cloud 服务端高可用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发AQS源码分析篇/">啃透Java并发AQS源码分析篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之死锁篇/">啃透Java并发之死锁篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之synchronized篇/">啃透Java并发之synchronized篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之内存模型篇/">啃透Java并发之内存模型篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之原子操作类-AtomicLong源码分析-和非阻塞算法篇/">啃透Java并发之原子操作类(AtomicLong源码分析)和非阻塞算法篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之线程池篇/">啃透Java并发之线程池篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/设计模式之观察者模式/">设计模式之观察者模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/设计模式之策略模式/">设计模式之策略模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/Java构建对象实用技巧之Builder模式/">Java构建对象实用技巧之Builder模式</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/01/21/redis深入学习之实现主动和哨兵/">redis深入学习之实现主从和哨兵</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/19/redis深入学习之5种基本数据类型/">Redis深入学习之5种基本数据类型</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/13/markdown插入本地图片小策略/">markdown插入本地图片小技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/12/Spring-Cloud-hystrix服务短路和服务降级/">Spring Cloud hystrix服务短路和服务降级</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/使用Hexo搭建个人博客/">使用Hexo搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Spring Cloud Ribbon实现负载均衡/">Spring Cloud 负载均衡</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Spring Cloud 服务端高可用/">Spring Cloud 服务端高可用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Spring Cloud 服务注册和发现/">Spring Cloud 服务注册和发现</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之死锁篇/">啃透Java并发之死锁篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之synchronized篇/">啃透Java并发之synchronized篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发AQS源码分析篇/">啃透Java并发AQS源码分析篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之线程池篇/">啃透Java并发之线程池篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之内存模型篇/">啃透Java并发之内存模型篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之原子操作类-AtomicLong源码分析-和非阻塞算法篇/">啃透Java并发之原子操作类(AtomicLong源码分析)和非阻塞算法篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/设计模式之策略模式/">设计模式之策略模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/设计模式之观察者模式/">设计模式之观察者模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/Java构建对象实用技巧之Builder模式/">Java构建对象实用技巧之Builder模式</a></li></ul>
 
 
 

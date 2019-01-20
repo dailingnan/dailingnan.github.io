@@ -192,7 +192,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Cloud/">Spring Cloud</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/个人博客/">个人博客</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/并发/">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微服务/">微服务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技巧/">技巧</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/">Redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Cloud/">Spring Cloud</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/个人博客/">个人博客</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/并发/">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微服务/">微服务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微缓存/">微缓存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技巧/">技巧</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
                     </div>
                 </section>
                 
@@ -272,6 +272,182 @@
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我">
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-redis深入学习之实现主动和哨兵" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/01/21/redis深入学习之实现主动和哨兵/" class="article-date">
+      <time datetime="2019-01-20T17:41:26.000Z" itemprop="datePublished">2019-01-21</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/21/redis深入学习之实现主动和哨兵/">redis深入学习之实现主从和哨兵</a>
+    </h1>
+  
+
+		
+			<div style="margin-top:10px;">
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text">  字数统计: </span>
+        <span class="post-count">2.1k字</span>
+      </span>
+    </span>
+
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text">  阅读时长: </span>
+        <span class="post-count">10分</span>
+      </span>
+    </span>
+</div>
+<br><br>
+		
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <excerpt in="" index="" |="" 首页摘要=""> 
+
+<h1 id="redis主从架构​"><a href="#redis主从架构​" class="headerlink" title="redis主从架构​"></a>redis主从架构​</h1><h3 id="主从的优势"><a href="#主从的优势" class="headerlink" title="主从的优势"></a>主从的优势</h3><p>​    单机的 redis，能够承载的 QPS 大概就在上万到几万不等。对于缓存来说，一般都是用来支撑<strong>读高并发</strong>的。因此架构做成主从(master-slave)架构，一主多从，主负责写，并且将数据复制到其它的 slave 节点，从节点负责读。所有的<strong>读请求全部走从节点</strong>。这样也可以很轻松实现水平扩容，<strong>支撑读高并发</strong>。</p></excerpt>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Redis-教程/">Redis 教程</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/">Redis</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/微缓存/">微缓存</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2019/01/21/redis深入学习之实现主动和哨兵/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-redis深入学习之5种基本数据类型" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/01/19/redis深入学习之5种基本数据类型/" class="article-date">
+      <time datetime="2019-01-19T07:06:38.000Z" itemprop="datePublished">2019-01-19</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/19/redis深入学习之5种基本数据类型/">Redis深入学习之5种基本数据类型</a>
+    </h1>
+  
+
+		
+			<div style="margin-top:10px;">
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text">  字数统计: </span>
+        <span class="post-count">3k字</span>
+      </span>
+    </span>
+
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text">  阅读时长: </span>
+        <span class="post-count">11分</span>
+      </span>
+    </span>
+</div>
+<br><br>
+		
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <excerpt in="" index="" |="" 首页摘要=""> 
+
+<h1 id="Redis-5种基本数据类型"><a href="#Redis-5种基本数据类型" class="headerlink" title="Redis 5种基本数据类型"></a>Redis 5种基本数据类型</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>​    redis平时还是经常使用的，但是只是停留在基本使用上面，5种基本的数据类型基本也只是用了字符串，觉得还是有必要深入学习下Redis，从5种基本数据类型开始。</p></excerpt>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+      
+        <p class="article-more-link">
+          <a href="/2019/01/19/redis深入学习之5种基本数据类型/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-markdown插入本地图片小策略" class="article article-type-post" itemscope="" itemprop="blogPost">
   
@@ -600,8 +776,9 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-              <p><excerpt in="" index="" |="" 首页摘要=""> </excerpt></p>
-<h1 id="Spring-Cloud-Ribbon实现负载均衡"><a href="#Spring-Cloud-Ribbon实现负载均衡" class="headerlink" title="Spring Cloud Ribbon实现负载均衡"></a>Spring Cloud Ribbon实现负载均衡</h1><h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><p>负载均衡在系统架构中是一个非常重要的角色，在前面大型网站架构学习总结中，可以看到，高可用，伸缩性，性能几个架构要素中，负载均衡都有着很重要的地位，是系统压力缓解，系统扩容的重要手段之一。<br></p>
+              <excerpt in="" index="" |="" 首页摘要=""> 
+
+<h1 id="Spring-Cloud-Ribbon实现负载均衡"><a href="#Spring-Cloud-Ribbon实现负载均衡" class="headerlink" title="Spring Cloud Ribbon实现负载均衡"></a>Spring Cloud Ribbon实现负载均衡</h1><h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><p>负载均衡在系统架构中是一个非常重要的角色，在前面大型网站架构学习总结中，可以看到，高可用，伸缩性，性能几个架构要素中，负载均衡都有着很重要的地位，是系统压力缓解，系统扩容的重要手段之一。<br></p></excerpt>
           
       
     </div>
@@ -622,99 +799,6 @@
       
         <p class="article-more-link">
           <a href="/2019/01/07/Spring Cloud Ribbon实现负载均衡/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-Spring Cloud 服务注册和发现" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2019/01/07/Spring Cloud 服务注册和发现/" class="article-date">
-      <time datetime="2019-01-07T13:19:15.000Z" itemprop="datePublished">2019-01-07</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/07/Spring Cloud 服务注册和发现/">Spring Cloud 服务注册和发现</a>
-    </h1>
-  
-
-		
-			<div style="margin-top:10px;">
-    <span class="post-time">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-keyboard-o"></i>
-        <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">1.1k字</span>
-      </span>
-    </span>
-
-    <span class="post-time">
-      &nbsp; | &nbsp;
-      <span class="post-meta-item-icon">
-        <i class="fa fa-hourglass-half"></i>
-        <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">4分</span>
-      </span>
-    </span>
-</div>
-<br><br>
-		
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <excerpt in="" index="" |="" 首页摘要=""> 
-
-
-<h1 id="Spring-Cloud-服务注册和发现"><a href="#Spring-Cloud-服务注册和发现" class="headerlink" title="Spring Cloud 服务注册和发现"></a>Spring Cloud 服务注册和发现</h1><h2 id="搭建服务注册中心"><a href="#搭建服务注册中心" class="headerlink" title="搭建服务注册中心"></a>搭建服务注册中心</h2></excerpt>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Spring-Cloud教程/">Spring Cloud教程</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring-Cloud/">Spring Cloud</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/微服务/">微服务</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2019/01/07/Spring Cloud 服务注册和发现/#more">阅读全文 >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -825,11 +909,11 @@
 
 
   
-    <article id="post-啃透Java并发AQS源码分析篇" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-Spring Cloud 服务注册和发现" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2019/01/06/啃透Java并发AQS源码分析篇/" class="article-date">
-      <time datetime="2019-01-06T09:13:43.000Z" itemprop="datePublished">2019-01-06</time>
+      <a href="/2019/01/07/Spring Cloud 服务注册和发现/" class="article-date">
+      <time datetime="2019-01-07T13:19:15.000Z" itemprop="datePublished">2019-01-07</time>
 </a>
 
 
@@ -844,7 +928,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/06/啃透Java并发AQS源码分析篇/">啃透Java并发AQS源码分析篇</a>
+      <a class="article-title" href="/2019/01/07/Spring Cloud 服务注册和发现/">Spring Cloud 服务注册和发现</a>
     </h1>
   
 
@@ -854,7 +938,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">2.3k字</span>
+        <span class="post-count">1.1k字</span>
       </span>
     </span>
 
@@ -863,7 +947,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-hourglass-half"></i>
         <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">9分</span>
+        <span class="post-count">4分</span>
       </span>
     </span>
 </div>
@@ -878,7 +962,8 @@
           
               <excerpt in="" index="" |="" 首页摘要=""> 
 
-<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>AQS:<strong>队列同步器AbstractQueuedSynchronizer（以下简称同步器）</strong>，是用来构建锁或者其他同步组件的基础框架，许多同步器可以通过AQS很容易的并且高效的构建出来。不仅RenntrantLock和Semaphore是基于AQS构建的，还包括CountDownLatch、ReentrantReadWriteLock、SynchronousQueue和FutureTask。</p></excerpt>
+
+<h1 id="Spring-Cloud-服务注册和发现"><a href="#Spring-Cloud-服务注册和发现" class="headerlink" title="Spring Cloud 服务注册和发现"></a>Spring Cloud 服务注册和发现</h1><h2 id="搭建服务注册中心"><a href="#搭建服务注册中心" class="headerlink" title="搭建服务注册中心"></a>搭建服务注册中心</h2></excerpt>
           
       
     </div>
@@ -887,18 +972,18 @@
       
       
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Java并发编程/">Java并发编程</a>
+    <a class="article-category-link" href="/categories/Spring-Cloud教程/">Spring Cloud教程</a>
     </div>
 
 
       
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring-Cloud/">Spring Cloud</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/微服务/">微服务</a></li></ul>
     </div>
 
       
         <p class="article-more-link">
-          <a href="/2019/01/06/啃透Java并发AQS源码分析篇/#more">阅读全文 >></a>
+          <a href="/2019/01/07/Spring Cloud 服务注册和发现/#more">阅读全文 >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -1083,98 +1168,6 @@
       
         <p class="article-more-link">
           <a href="/2019/01/06/啃透Java并发之synchronized篇/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-啃透Java并发之内存模型篇" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2019/01/06/啃透Java并发之内存模型篇/" class="article-date">
-      <time datetime="2019-01-06T09:13:43.000Z" itemprop="datePublished">2019-01-06</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/06/啃透Java并发之内存模型篇/">啃透Java并发之内存模型篇</a>
-    </h1>
-  
-
-		
-			<div style="margin-top:10px;">
-    <span class="post-time">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-keyboard-o"></i>
-        <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">3.2k字</span>
-      </span>
-    </span>
-
-    <span class="post-time">
-      &nbsp; | &nbsp;
-      <span class="post-meta-item-icon">
-        <i class="fa fa-hourglass-half"></i>
-        <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">11分</span>
-      </span>
-    </span>
-</div>
-<br><br>
-		
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <excerpt in="" index="" |="" 首页摘要=""> 
-
-<h1 id="Java-内存模型"><a href="#Java-内存模型" class="headerlink" title="Java 内存模型"></a>Java 内存模型</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>​    在并发编程中，需要处理两个关键问题：线程之间如何通信及线程之间如何同步（这里的线程是指并发执行的活动实体）。通信是指线程之间以何种机制来交换信息。在命令式编程中，线程之间的通信机制有两种：共享内存和消息传递。</p></excerpt>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Java并发编程/">Java并发编程</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2019/01/06/啃透Java并发之内存模型篇/#more">阅读全文 >></a>
         </p>
       
       <div class="clearfix"></div>

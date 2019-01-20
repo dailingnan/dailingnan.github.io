@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="dailn">
+
+
+
+<meta name="description" content="redis主从架构​主从的优势​    单机的 redis，能够承载的 QPS 大概就在上万到几万不等。对于缓存来说，一般都是用来支撑读高并发的。因此架构做成主从(master-slave)架构，一主多从，主负责写，并且将数据复制到其它的 slave 节点，从节点负责读。所有的读请求全部走从节点。这样也可以很轻松实现水平扩容，支撑读高并发。">
+<meta name="keywords" content="微缓存,Redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis深入学习之实现主从和哨兵">
+<meta property="og:url" content="http://yoursite.com/2019/01/21/redis深入学习之实现主动和哨兵/index.html">
+<meta property="og:site_name" content="dailn的个人博客">
+<meta property="og:description" content="redis主从架构​主从的优势​    单机的 redis，能够承载的 QPS 大概就在上万到几万不等。对于缓存来说，一般都是用来支撑读高并发的。因此架构做成主从(master-slave)架构，一主多从，主负责写，并且将数据复制到其它的 slave 节点，从节点负责读。所有的读请求全部走从节点。这样也可以很轻松实现水平扩容，支撑读高并发。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-20T17:45:21.311Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis深入学习之实现主从和哨兵">
+<meta name="twitter:description" content="redis主从架构​主从的优势​    单机的 redis，能够承载的 QPS 大概就在上万到几万不等。对于缓存来说，一般都是用来支撑读高并发的。因此架构做成主从(master-slave)架构，一主多从，主负责写，并且将数据复制到其它的 slave 节点，从节点负责读。所有的读请求全部走从节点。这样也可以很轻松实现水平扩容，支撑读高并发。">
+
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="dailn的个人博客" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>redis深入学习之实现主从和哨兵 | dailn的个人博客</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head></html>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">dailn</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="">
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class="no-result">No results found <i class="fa fa-spinner fa-pulse"></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                            <li><a href="/message/">留言板</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa CSDN" href="https://blog.csdn.net/dailingnan0827" title="CSDN"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/">Redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Cloud/">Spring Cloud</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/个人博客/">个人博客</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/并发/">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微服务/">微服务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微缓存/">微缓存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技巧/">技巧</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于后端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">dailn</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">dailn</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                    <li><a href="/message/">留言板</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="https://blog.csdn.net/dailingnan0827" title="CSDN"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我">
+</nav>
+      <div class="body-wrap"><article id="post-redis深入学习之实现主动和哨兵" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/01/21/redis深入学习之实现主动和哨兵/" class="article-date">
+      <time datetime="2019-01-20T17:41:26.000Z" itemprop="datePublished">2019-01-21</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      redis深入学习之实现主从和哨兵
+    </h1>
+  
+
+		
+			<div style="margin-top:10px;">
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text">  字数统计: </span>
+        <span class="post-count">2.1k字</span>
+      </span>
+    </span>
+
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text">  阅读时长: </span>
+        <span class="post-count">10分</span>
+      </span>
+    </span>
+</div>
+<br><br>
+		
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Redis-教程/">Redis 教程</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/">Redis</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/微缓存/">微缓存</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <excerpt in="" index="" |="" 首页摘要=""> 
+
+<h1 id="redis主从架构​"><a href="#redis主从架构​" class="headerlink" title="redis主从架构​"></a>redis主从架构​</h1><h3 id="主从的优势"><a href="#主从的优势" class="headerlink" title="主从的优势"></a>主从的优势</h3><p>​    单机的 redis，能够承载的 QPS 大概就在上万到几万不等。对于缓存来说，一般都是用来支撑<strong>读高并发</strong>的。因此架构做成主从(master-slave)架构，一主多从，主负责写，并且将数据复制到其它的 slave 节点，从节点负责读。所有的<strong>读请求全部走从节点</strong>。这样也可以很轻松实现水平扩容，<strong>支撑读高并发</strong>。</p>
+<a id="more"></a>
+<the rest="" of="" contents="" |="" 余下全文="">
+
+<p>​    主从架构除了能够支撑更高的并发量外，还保障了可用性，有了主从，当 master 挂掉的时候，运维让从库过来接管，服务就可以继续，否则 master 需要经过数据恢复和重启的过程，这就可能会拖很长的时间，影响线上业务的持续服务。</p>
+<h2 id="redis-配置主从"><a href="#redis-配置主从" class="headerlink" title="redis 配置主从"></a>redis 配置主从</h2><p>接下来我们通过不同的端口来模拟3台机，实现redis主从</p>
+<p>复制redis.conf多分配置文件，并通过端口命名，完成后应该包含三个配置文件</p>
+<p>redis-6379.conf</p>
+<p>redis-6380.conf</p>
+<p>redis-6381.conf</p>
+<h4 id="配置Redis主节点"><a href="#配置Redis主节点" class="headerlink" title="配置Redis主节点"></a>配置Redis主节点</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">port 6381 #指定端口</span><br><span class="line">daemonize yes #设置后台启动</span><br><span class="line">slave-read-only yes #从节点只读</span><br><span class="line">requirepass &quot;123456&quot; #设置密码</span><br></pre></td></tr></table></figure>
+<h4 id="配置从节点"><a href="#配置从节点" class="headerlink" title="配置从节点"></a>配置从节点</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">port 6380\6379 #指定端口</span><br><span class="line">daemonize yes #设置后台启动</span><br><span class="line">slave-read-only yes #从节点只读</span><br><span class="line">requirepass &quot;123456&quot; #设置密码</span><br><span class="line">#区别主节点</span><br><span class="line">slaveof 127.0.0.1 6381 #配置主节点信息</span><br><span class="line">masterauth &quot;123456&quot; #连接主节点配置</span><br></pre></td></tr></table></figure>
+<p>配置完主从后，可以启动测试一下</p>
+<figure class="highlight plain"><figcaption><span>-p 6381 -a 123456 ```连接主节点客户端</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">输入info能看到当前节点的信息，如果是主节点还可以看到从节点的信息</span><br><span class="line"></span><br><span class="line">```properties</span><br><span class="line"># Replication</span><br><span class="line">role:master</span><br><span class="line">connected_slaves:1</span><br><span class="line">slave0:ip=127.0.0.1,port=6380,state=online,offset=524289,lag=1</span><br><span class="line">slave1:ip=127.0.0.1,port=6379,state=online,offset=524289,lag=1</span><br><span class="line">master_repl_offset:524555</span><br><span class="line">repl_backlog_active:1</span><br><span class="line">repl_backlog_size:1048576</span><br><span class="line">repl_backlog_first_byte_offset:159</span><br><span class="line">repl_backlog_histlen:524397</span><br></pre></td></tr></table></figure>
+<p>主节点读写都是可以的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6381&gt; set test 1</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6381&gt; keys *</span><br><span class="line">1) &quot;test&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><figcaption><span>-p 6379 -a 123456 ```连接从节点客户端</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">输入info能看到当前节点的信息</span><br><span class="line"></span><br><span class="line">```properties</span><br><span class="line"># Replication</span><br><span class="line">role:slave</span><br><span class="line">master_host:127.0.0.1</span><br><span class="line">master_port:6381</span><br><span class="line">master_link_status:up</span><br></pre></td></tr></table></figure>
+<p>从节点只能不能写数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6380&gt; get test</span><br><span class="line">&quot;3&quot;</span><br><span class="line">127.0.0.1:6380&gt; set test 2</span><br><span class="line">(error) READONLY You can&apos;t write against a read only slave.</span><br><span class="line">127.0.0.1:6380&gt;</span><br></pre></td></tr></table></figure>
+<p>Redis主从实现好了，一旦主节点出现故障，我们可以通过<code>slaveof no one</code>手动将从节点t提升为新的主节点，保障Redis继续正常工作，由于从节前之前同步了数据，所有此时从节点的数据还是和宕机前主节点的数据一致的。</p>
+<h2 id="Redis-哨兵"><a href="#Redis-哨兵" class="headerlink" title="Redis 哨兵"></a>Redis 哨兵</h2><p>sentinel，中文名是哨兵。哨兵是 redis 集群机构中非常重要的一个组件，主要有以下功能：</p>
+<ul>
+<li>集群监控：负责监控 redis master 和 slave 进程是否正常工作。</li>
+<li>消息通知：如果某个 redis 实例有故障，那么哨兵负责发送消息作为报警通知给管理员。</li>
+<li>故障转移：如果 master node 挂掉了，会自动转移到 slave node 上。</li>
+<li>配置中心：如果故障转移发生了，通知 client 客户端新的 master 地址。</li>
+</ul>
+<h4 id="哨兵的优势"><a href="#哨兵的优势" class="headerlink" title="哨兵的优势"></a>哨兵的优势</h4><p>​    目前我们讲的 Redis 还只是主从方案，最终一致性。可以实现高并发以及故障转移，但是缺陷就是必须<strong>手动</strong>切换主节点，首先不能保障任何时候Redis主节点挂了都有人在，其次，主节点挂了，也不能第一时间切换。所以Redis提供了哨兵（Sentinel），自动切换主节点。</p>
+<h4 id="配置哨兵"><a href="#配置哨兵" class="headerlink" title="配置哨兵"></a>配置哨兵</h4><p>​    配置哨兵只需要修改<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">sentinel-6379.conf</span><br><span class="line"></span><br><span class="line">sentinel-6380.conf</span><br><span class="line"></span><br><span class="line">sentinel-6381.conf</span><br><span class="line"></span><br><span class="line">配置```sentinel.conf``就不区分主节点和从节点了，统一配置主节点的信息就可以了，他会自动去从主节点找到从节点的信息的</span><br><span class="line"></span><br><span class="line">```properties</span><br><span class="line">port 26379\26380\26381 #配置端口</span><br><span class="line">sentinel monitor mymaster 127.0.0.1 6381 2 #配置主节点信息  2代表只要有两个从节点任务主节点宕机了，主节点就客观宕机了</span><br><span class="line">sentinel auth-pass mymaster 123456 #连接主节点密码</span><br></pre></td></tr></table></figure></p>
+<p>通过<figure class="highlight plain"><figcaption><span>sentinel-6379.conf```分别启动三个哨兵,控制台打印如下信息</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">```properties</span><br><span class="line">18198:X 20 Jan 23:53:43.317 # Sentinel ID is 57e93a8599ad80e26046e70441dbcb83248c8323</span><br><span class="line">18198:X 20 Jan 23:53:43.317 # +monitor master mymaster 127.0.0.1 6381 quorum 1</span><br><span class="line">18198:X 20 Jan 23:53:43.317 # +slave slave  127.0.0.1 6379  127.0.0.1 6379 @mymaster127.0.0.1 6381 </span><br><span class="line">18198:X 20 Jan 23:53:43.317 # +slave slave  127.0.0.1 6380  127.0.0.1 6380 @mymaster127.0.0.1 6381</span><br></pre></td></tr></table></figure></p>
+<p>此时，我们把6381的Redis人为kill掉，观察控制台，会打印如下信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">18198:X 20 Jan 23:55:34.945 # +odown master mymaster 127.0.0.1 6381 #quorum 1/1</span><br><span class="line">18198:X 20 Jan 23:58:43.681 # +sdown slave 127.0.0.1:6380 127.0.0.1 6380 @ mymaster 127.0.0.1 6381</span><br><span class="line">18198:X 20 Jan 23:58:43.681 # +sdown slave 127.0.0.1:6379 127.0.0.1 6379 @ mymaster 127.0.0.1 6381</span><br><span class="line">18198:X 21 Jan 00:00:14.378 # +new-epoch 2</span><br><span class="line">18198:X 21 Jan 00:00:14.378 # +try-failover master mymaster 127.0.0.1 6381</span><br><span class="line">18198:X 21 Jan 00:00:14.383 # +vote-for-leader 57e93a8599ad80e26046e70441dbcb83248c8323 2</span><br><span class="line">18198:X 21 Jan 00:00:14.383 # +elected-leader master mymaster 127.0.0.1 6381</span><br><span class="line">18198:X 21 Jan 00:00:14.383 # +failover-state-select-slave master mymaster 127.0.0.1 6381</span><br><span class="line">18198:X 21 Jan 00:00:14.449 # +selected-slave slave 127.0.0.1:6381 127.0.0.1 6381 @ mymaster 127.0.0.1 6380</span><br><span class="line">18198:X 21 Jan 00:00:14.449 * +failover-state-send-slaveof-noone slave 127.0.0.1:6381 127.0.0.1 6381 @ mymaster 127.0.0.1 6380</span><br><span class="line">18198:X 21 Jan 00:00:14.501 * +failover-state-wait-promotion slave 127.0.0.1:6381 127.0.0.1 6381 @ mymaster 127.0.0.1 6380</span><br><span class="line">18198:X 21 Jan 00:00:15.019 # +promoted-slave slave 127.0.0.1:6381 127.0.0.1 6381 @ mymaster 127.0.0.1 6380</span><br><span class="line">18198:X 21 Jan 00:00:15.019 # +failover-state-reconf-slaves master mymaster 127.0.0.1 6380</span><br><span class="line">18198:X 21 Jan 00:00:15.114 # +failover-end master mymaster 127.0.0.1 6380</span><br><span class="line">18198:X 21 Jan 00:00:15.114 # +switch-master mymaster 127.0.0.1 6381 127.0.0.1 6380</span><br><span class="line">18198:X 21 Jan 00:00:15.115 * +slave slave 127.0.0.1:6380 127.0.0.1 6380 @ mymaster 127.0.0.1 6381</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><figcaption><span>mymaster 127.0.0.1 6381 127.0.0.1 6380```从这里可以看到，主节点宕机后，6380从节点自动提升成主节点</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">```java</span><br><span class="line">18198:X 20 Jan 23:58:43.681 # +sdown slave 127.0.0.1:6380 127.0.0.1 6380 @ mymaster 127.0.0.1 6379</span><br><span class="line">18198:X 21 Jan 00:00:14.378 # +new-epoch 2</span><br><span class="line">18198:X 21 Jan 00:00:14.378 # +try-failover master mymaster 127.0.0.1 6379</span><br><span class="line">18198:X 21 Jan 00:00:14.383 # +vote-for-leader 57e93a8599ad80e26046e70441dbcb83248c8323 2</span><br><span class="line">18198:X 21 Jan 00:00:14.383 # +elected-leader master mymaster 127.0.0.1 6379</span><br><span class="line">18198:X 21 Jan 00:00:14.383 # +failover-state-select-slave master mymaster 127.0.0.1 6379</span><br><span class="line">18198:X 21 Jan 00:00:14.449 # +selected-slave slave 127.0.0.1:6381 127.0.0.1 6381 @ mymaster 127.0.0.1 6379</span><br><span class="line">18198:X 21 Jan 00:00:14.449 * +failover-state-send-slaveof-noone slave 127.0.0.1:6381 127.0.0.1 6381 @ mymaster 127.0.0.1 6379</span><br><span class="line">18198:X 21 Jan 00:00:14.501 * +failover-state-wait-promotion slave 127.0.0.1:6381 127.0.0.1 6381 @ mymaster 127.0.0.1 6379</span><br><span class="line">18198:X 21 Jan 00:00:15.019 # +promoted-slave slave 127.0.0.1:6381 127.0.0.1 6381 @ mymaster 127.0.0.1 6379</span><br><span class="line">18198:X 21 Jan 00:00:15.019 # +failover-state-reconf-slaves master mymaster 127.0.0.1 6379</span><br><span class="line">18198:X 21 Jan 00:00:15.114 # +failover-end master mymaster 127.0.0.1 6379</span><br><span class="line">18198:X 21 Jan 00:00:15.114 # +switch-master mymaster 127.0.0.1 6379 127.0.0.1 6381</span><br><span class="line">18198:X 21 Jan 00:00:15.115 * +slave slave 127.0.0.1:6380 127.0.0.1 6380 @ mymaster 127.0.0.1 6381</span><br><span class="line">18198:X 21 Jan 00:00:15.115 * +slave slave 127.0.0.1:6379 127.0.0.1 6379 @ mymaster 127.0.0.1 6381</span><br><span class="line">18198:X 21 Jan 00:00:45.128 # +sdown slave 127.0.0.1:6380 127.0.0.1 6380 @ mymaster 127.0.0.1 6381</span><br><span class="line">18198:X 21 Jan 00:02:16.242 # -sdown slave 127.0.0.1:6380 127.0.0.1 6380 @ mymaster 127.0.0.1 6381</span><br><span class="line">18198:X 21 Jan 00:02:26.181 * +convert-to-slave slave 127.0.0.1:6380 127.0.0.1 6380 @ mymaster 127.0.0.1 6381</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><figcaption><span>-p 6380 -a 123456 ```连接6380客户端</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">```properties</span><br><span class="line"># Replication</span><br><span class="line">role:master</span><br><span class="line">connected_slaves:1</span><br><span class="line">slave1:ip=127.0.0.1,port=6379,state=online,offset=524289,lag=1</span><br><span class="line">master_repl_offset:524555</span><br><span class="line">repl_backlog_active:1</span><br><span class="line">repl_backlog_size:1048576</span><br><span class="line">repl_backlog_first_byte_offset:159</span><br><span class="line">repl_backlog_histlen:524397</span><br></pre></td></tr></table></figure>
+<p>可以看到6380此时已经是主节点了，通过sentinel，我们就已经实现了自动切换redis主从节点</p>
+<p>其实sentinel实现主节点切换是通过修改Redis配置文件的，此时我们再去查看redis-6380.conf配置文件，就会发现，之前的<code>slaveof 127.0.0.1 6381</code>配置已经不见了，同时redis-6379.conf的配置文件，已经由原先的<code>slaveof 127.0.0.1 6381</code>变成了<code>slaveof 127.0.0.1 6380</code>(在配置文件底部)</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过Redis主从和哨兵结合，我们就能在实现Redis并发量增加的同时保障了Redis的可用性，以及出现故障时能够实行故障转移。</p>
+<p>参考文章</p>
+</the></excerpt>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2019/01/21/redis深入学习之实现主动和哨兵/">redis深入学习之实现主从和哨兵</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">dailn</a></p>
+        <p><span>发布时间:</span>2019-01-21, 01:41:26</p>
+        <p><span>最后更新:</span>2019-01-21, 01:45:21</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2019/01/21/redis深入学习之实现主动和哨兵/" title="redis深入学习之实现主从和哨兵">http://yoursite.com/2019/01/21/redis深入学习之实现主动和哨兵/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/01/21/redis深入学习之实现主动和哨兵/　　作者: dailn" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target="_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2019/01/19/redis深入学习之5种基本数据类型/">
+                    Redis深入学习之5种基本数据类型
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#redis主从架构​"><span class="toc-number">1.</span> <span class="toc-text">redis主从架构​</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#主从的优势"><span class="toc-number">1.0.1.</span> <span class="toc-text">主从的优势</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis-配置主从"><span class="toc-number">1.1.</span> <span class="toc-text">redis 配置主从</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#配置Redis主节点"><span class="toc-number">1.1.0.1.</span> <span class="toc-text">配置Redis主节点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置从节点"><span class="toc-number">1.1.0.2.</span> <span class="toc-text">配置从节点</span></a></li></ol></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-哨兵"><span class="toc-number">1.2.</span> <span class="toc-text">Redis 哨兵</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#哨兵的优势"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">哨兵的优势</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置哨兵"><span class="toc-number">1.2.0.2.</span> <span class="toc-text">配置哨兵</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">2.</span> <span class="toc-text">总结</span></a></li>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"redis深入学习之实现主从和哨兵　| dailn的个人博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+		<section class="livere" id="comments">
+    <!-- 来必力City版安装代码 -->
+	<div id="lv-container" data-id="city" data-uid="MTAyMC80MjAwMC8xODU0Nw==">
+		<script type="text/javascript">
+	   (function(d, s) {
+		   var j, e = d.getElementsByTagName(s)[0];
+
+		   if (typeof LivereTower === 'function') { return; }
+
+		   j = d.createElement(s);
+		   j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+		   j.async = true;
+
+		   e.parentNode.insertBefore(j, e);
+	   })(document, 'script');
+		</script>
+	<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+	</div>
+	<!-- City版安装代码已完成 -->
+</section>
+
+	
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2019/01/19/redis深入学习之5种基本数据类型/" title="下一篇: Redis深入学习之5种基本数据类型">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/01/21/redis深入学习之实现主动和哨兵/">redis深入学习之实现主从和哨兵</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/19/redis深入学习之5种基本数据类型/">Redis深入学习之5种基本数据类型</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/13/markdown插入本地图片小策略/">markdown插入本地图片小技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/12/Spring-Cloud-hystrix服务短路和服务降级/">Spring Cloud hystrix服务短路和服务降级</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/使用Hexo搭建个人博客/">使用Hexo搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Spring Cloud Ribbon实现负载均衡/">Spring Cloud 负载均衡</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Spring Cloud 服务端高可用/">Spring Cloud 服务端高可用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Spring Cloud 服务注册和发现/">Spring Cloud 服务注册和发现</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之死锁篇/">啃透Java并发之死锁篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之synchronized篇/">啃透Java并发之synchronized篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发AQS源码分析篇/">啃透Java并发AQS源码分析篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之线程池篇/">啃透Java并发之线程池篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之内存模型篇/">啃透Java并发之内存模型篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之原子操作类-AtomicLong源码分析-和非阻塞算法篇/">啃透Java并发之原子操作类(AtomicLong源码分析)和非阻塞算法篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/设计模式之策略模式/">设计模式之策略模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/设计模式之观察者模式/">设计模式之观察者模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/Java构建对象实用技巧之Builder模式/">Java构建对象实用技巧之Builder模式</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2019 dailn
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style="display:none">
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style="display:none">
+                        <span id="page-visit" title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+	
+	<span id="busuanzi_container_site_pv">
+		本站总访问量<span id="busuanzi_value_site_pv"></span>次
+	</span>
+	
+	
+	<span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+		<script>
+			var now = new Date(); 
+			function createtime() { 
+				var grt= new Date("01/01/2019 12:49:00");//此处修改你的建站时间或者网站上线时间 
+				now.setTime(now.getTime()+250); 
+				days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+				hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+				if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+				mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+				seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+				snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+				document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 "; 
+				document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+			} 
+		setInterval("createtime()",250);
+		</script>
+		
+		
+		
+		
+		
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+		</script>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script type="text/javascript" src="/js/love.js"></script>
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
+<script type="text/javascript" src="/js/snow.js"></script>
+

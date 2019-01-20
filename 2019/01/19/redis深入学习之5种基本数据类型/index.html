@@ -15,24 +15,17 @@
 
 
 
-<meta name="description" content="Spring Cloud 服务注册和发现搭建服务注册中心">
-<meta name="keywords" content="微服务,Spring Cloud">
+<meta name="description" content="Redis 5种基本数据类型前言​    redis平时还是经常使用的，但是只是停留在基本使用上面，5种基本的数据类型基本也只是用了字符串，觉得还是有必要深入学习下Redis，从5种基本数据类型开始。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spring Cloud 服务注册和发现">
-<meta property="og:url" content="http://yoursite.com/2019/01/07/Spring Cloud 服务注册和发现/index.html">
+<meta property="og:title" content="Redis深入学习之5种基本数据类型">
+<meta property="og:url" content="http://yoursite.com/2019/01/19/redis深入学习之5种基本数据类型/index.html">
 <meta property="og:site_name" content="dailn的个人博客">
-<meta property="og:description" content="Spring Cloud 服务注册和发现搭建服务注册中心">
+<meta property="og:description" content="Redis 5种基本数据类型前言​    redis平时还是经常使用的，但是只是停留在基本使用上面，5种基本的数据类型基本也只是用了字符串，觉得还是有必要深入学习下Redis，从5种基本数据类型开始。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/4EE2AE653A204BB2B2783BEACB5A9FC1?method=download&shareKey=f31e9676db8abd1d5125205013abf48e">
-<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/B63449D6D39E4469A01BDCE88F0148F7?method=download&shareKey=e74937594dd8cb1ea71962253a45296f">
-<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/9822EBC60FC94E7185258F79D734E298?method=download&shareKey=01a71f78fc63ba692c76bdd0a0186503">
-<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/73F1E72382944D98810A2298F2DC37FC?method=download&shareKey=087e4f6a8366a6db77aab45c89b1a9c1">
-<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/1D969E4A75BC4A0F92CEFFA3A41C810E?method=download&shareKey=62d1b8caf282b53132809708ebd18315">
-<meta property="og:updated_time" content="2019-01-07T13:22:00.009Z">
+<meta property="og:updated_time" content="2019-01-19T17:26:57.605Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Spring Cloud 服务注册和发现">
-<meta name="twitter:description" content="Spring Cloud 服务注册和发现搭建服务注册中心">
-<meta name="twitter:image" content="https://note.youdao.com/yws/api/personal/file/4EE2AE653A204BB2B2783BEACB5A9FC1?method=download&shareKey=f31e9676db8abd1d5125205013abf48e">
+<meta name="twitter:title" content="Redis深入学习之5种基本数据类型">
+<meta name="twitter:description" content="Redis 5种基本数据类型前言​    redis平时还是经常使用的，但是只是停留在基本使用上面，5种基本的数据类型基本也只是用了字符串，觉得还是有必要深入学习下Redis，从5种基本数据类型开始。">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -64,7 +57,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Spring Cloud 服务注册和发现 | dailn的个人博客</title>
+<title>Redis深入学习之5种基本数据类型 | dailn的个人博客</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -277,11 +270,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我">
 </nav>
-      <div class="body-wrap"><article id="post-Spring Cloud 服务注册和发现" class="article article-type-post" itemscope="" itemprop="blogPost">
+      <div class="body-wrap"><article id="post-redis深入学习之5种基本数据类型" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2019/01/07/Spring Cloud 服务注册和发现/" class="article-date">
-      <time datetime="2019-01-07T13:19:15.000Z" itemprop="datePublished">2019-01-07</time>
+      <a href="/2019/01/19/redis深入学习之5种基本数据类型/" class="article-date">
+      <time datetime="2019-01-19T07:06:38.000Z" itemprop="datePublished">2019-01-19</time>
 </a>
 
 
@@ -296,7 +289,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Spring Cloud 服务注册和发现
+      Redis深入学习之5种基本数据类型
     </h1>
   
 
@@ -306,7 +299,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">1.1k字</span>
+        <span class="post-count">3k字</span>
       </span>
     </span>
 
@@ -315,7 +308,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-hourglass-half"></i>
         <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">4分</span>
+        <span class="post-count">11分</span>
       </span>
     </span>
 </div>
@@ -326,16 +319,8 @@
       
       <div class="article-info article-info-post">
         
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Spring-Cloud教程/">Spring Cloud教程</a>
-    </div>
-
 
         
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring-Cloud/">Spring Cloud</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/微服务/">微服务</a></li></ul>
-    </div>
-
         <div class="clearfix"></div>
       </div>
       
@@ -345,38 +330,387 @@
           
         <excerpt in="" index="" |="" 首页摘要=""> 
 
-
-<h1 id="Spring-Cloud-服务注册和发现"><a href="#Spring-Cloud-服务注册和发现" class="headerlink" title="Spring Cloud 服务注册和发现"></a>Spring Cloud 服务注册和发现</h1><h2 id="搭建服务注册中心"><a href="#搭建服务注册中心" class="headerlink" title="搭建服务注册中心"></a>搭建服务注册中心</h2><a id="more"></a>
+<h1 id="Redis-5种基本数据类型"><a href="#Redis-5种基本数据类型" class="headerlink" title="Redis 5种基本数据类型"></a>Redis 5种基本数据类型</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>​    redis平时还是经常使用的，但是只是停留在基本使用上面，5种基本的数据类型基本也只是用了字符串，觉得还是有必要深入学习下Redis，从5种基本数据类型开始。</p>
+<a id="more"></a>
 <the rest="" of="" contents="" |="" 余下全文="">
 
-<h3 id="导入maven依赖"><a href="#导入maven依赖" class="headerlink" title="导入maven依赖"></a>导入maven依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&lt;parent&gt;</span><br><span class="line">   &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">   &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</span><br><span class="line">   &lt;version&gt;1.5.19.BUILD-SNAPSHOT&lt;/version&gt;</span><br><span class="line">   &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;</span><br><span class="line">&lt;/parent&gt;</span><br><span class="line"></span><br><span class="line">&lt;properties&gt;</span><br><span class="line">		&lt;java.version&gt;1.8&lt;/java.version&gt;</span><br><span class="line">		&lt;spring-cloud.version&gt;Edgware.BUILD-SNAPSHOT&lt;/spring-cloud.version&gt;</span><br><span class="line">	&lt;/properties&gt;&lt;dependency&gt;</span><br><span class="line">   &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">   &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-server&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;properties&gt;</span><br><span class="line">		&lt;java.version&gt;1.8&lt;/java.version&gt;</span><br><span class="line">		&lt;spring-cloud.version&gt;Edgware.BUILD-SNAPSHOT&lt;/spring-cloud.version&gt;</span><br><span class="line">	&lt;/properties&gt;&lt;dependency&gt;</span><br><span class="line">   &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">   &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-server&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;dependencyManagement&gt;</span><br><span class="line">   &lt;dependencies&gt;</span><br><span class="line">      &lt;dependency&gt;</span><br><span class="line">         &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">         &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;</span><br><span class="line">         &lt;version&gt;$&#123;spring-cloud.version&#125;&lt;/version&gt;</span><br><span class="line">         &lt;type&gt;pom&lt;/type&gt;</span><br><span class="line">         &lt;scope&gt;import&lt;/scope&gt;</span><br><span class="line">      &lt;/dependency&gt;</span><br><span class="line">   &lt;/dependencies&gt;</span><br><span class="line">&lt;/dependencyManagement&gt;</span><br></pre></td></tr></table></figure>
-<p>可通过<strong>Spring Initializr</strong>选择<strong>Eureka Server</strong>模块生成，要注意下SpringBoot的版本，不同的版本对应不同的Spring Cloud版本，我这里用的是1.5.19。</p>
-<h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">server.port=1111</span><br><span class="line">eureka.instance.hostname=localhost</span><br><span class="line">#关闭向注册中心注册</span><br><span class="line">eureka.client.register-with-eureka=false</span><br><span class="line">#关闭从注册中心获取实例</span><br><span class="line">eureka.client.fetch-registry=false</span><br></pre></td></tr></table></figure>
-<p>由于本身就是服务端，所以不需要向注册中心注册自己本身，服务端的只要职责是维护服务实例，所以也不需要获取服务实例</p>
-<h3 id="修改启动类"><a href="#修改启动类" class="headerlink" title="修改启动类"></a>修改启动类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableEurekaServer</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EurekaApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">      SpringApplication.run(EurekaApplication.class, args);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>导入依赖后，只需要在启动上面加上<strong>@EnableEurekaServer</strong>注解就可以了</p>
-<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>直接启动应用，然后访问<a href="http://localhost:1111/就能看到注册中心的界面" target="_blank" rel="noopener">http://localhost:1111/就能看到注册中心的界面</a></p>
-<p><img src="https://note.youdao.com/yws/api/personal/file/4EE2AE653A204BB2B2783BEACB5A9FC1?method=download&amp;shareKey=f31e9676db8abd1d5125205013abf48e" alt="1546138557820"></p>
-<p>此时可以看到实例列表是没有实例的，接下来我们注册一个客户端上去</p>
-<h2 id="搭建Eureka客户端"><a href="#搭建Eureka客户端" class="headerlink" title="搭建Eureka客户端"></a>搭建Eureka客户端</h2><h3 id="导入maven依赖-1"><a href="#导入maven依赖-1" class="headerlink" title="导入maven依赖"></a>导入maven依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">   &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">   &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-client&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
-<h3 id="修改配置文件-1"><a href="#修改配置文件-1" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">spring.application.name=consumer</span><br><span class="line">server.port=1112</span><br><span class="line">#指定注册中心的地址</span><br><span class="line">eureka.client.serviceUrl.defaultZone=http://localhost:1111/eureka/</span><br></pre></td></tr></table></figure>
-<p>这里只需要指定注册中心的地址就可以了</p>
-<h3 id="修改启动类-1"><a href="#修改启动类-1" class="headerlink" title="修改启动类"></a>修改启动类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableDiscoveryClient</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EurekaClientApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">      SpringApplication.run(EurekaClientApplication.class, args);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里只需要加上<strong>@EnableDiscoveryClient</strong>注解就可以了</p>
-<h3 id="启动-1"><a href="#启动-1" class="headerlink" title="启动"></a>启动</h3><p>启动Eureka客户端后，我们再次查看注册中心就能发现我们的客户端实例注册上去了</p>
-<p><img src="https://note.youdao.com/yws/api/personal/file/B63449D6D39E4469A01BDCE88F0148F7?method=download&amp;shareKey=e74937594dd8cb1ea71962253a45296f" alt="1546140044542"></p>
-<h2 id="Eureka-Server增加安全用户认证"><a href="#Eureka-Server增加安全用户认证" class="headerlink" title="Eureka Server增加安全用户认证"></a>Eureka Server增加安全用户认证</h2><p>在使用Eureka Server的时候，我们直接访问注册中心的页面就能看到所有的实例信息，在生产环境这样肯定是不安全的，不仅如此，我们把Eureka Client注册上去也不需要认证，用户只要知道地址就能达到把自己的服务伪装成同名服务注册上去，这也是很不安全的，Erueka Server对此提供了安全用户认证。</p>
-<h3 id="配置访问用户名和密码"><a href="#配置访问用户名和密码" class="headerlink" title="配置访问用户名和密码"></a>配置访问用户名和密码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#添加HTTP basic基本验证</span><br><span class="line">security:</span><br><span class="line">  basic:</span><br><span class="line">    enabled: true</span><br><span class="line">  user:</span><br><span class="line">    name: dailn</span><br><span class="line">    password: dailn!123</span><br></pre></td></tr></table></figure>
-<p>首先我们需要开启安全校验，然后配置用户名和密码</p>
-<h4 id="访问注册中心管理页面"><a href="#访问注册中心管理页面" class="headerlink" title="访问注册中心管理页面"></a>访问注册中心管理页面</h4><p><img src="https://note.youdao.com/yws/api/personal/file/9822EBC60FC94E7185258F79D734E298?method=download&amp;shareKey=01a71f78fc63ba692c76bdd0a0186503" alt="1546155275439"></p>
-<p>可以看到，这里就需要校验用户和密码了，只有校验通过才能访问注册中心管理页面</p>
-<p><img src="https://note.youdao.com/yws/api/personal/file/73F1E72382944D98810A2298F2DC37FC?method=download&amp;shareKey=087e4f6a8366a6db77aab45c89b1a9c1" alt="1546155354052"></p>
-<h4 id="客户端再次注册"><a href="#客户端再次注册" class="headerlink" title="客户端再次注册"></a>客户端再次注册</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server</span><br></pre></td></tr></table></figure>
-<p>增加了安全认证后，客户端就注册不上去了，此时我们需要在客户端注册的时候也加上安全认证</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">eureka.client.security.basic.user=dailn</span><br><span class="line">eureka.client.security.basic.password=dailn!123</span><br><span class="line">eureka.client.serviceUrl.defaultZone=http://$&#123;eureka.client.security.basic.user&#125;:$&#123;eureka.client.security.basic.password&#125;@localhost:1111/eureka/</span><br></pre></td></tr></table></figure>
-<p>重新启动就能注册成功，在注册中心管理界面也能看到实例了</p>
-<p><img src="https://note.youdao.com/yws/api/personal/file/1D969E4A75BC4A0F92CEFFA3A41C810E?method=download&amp;shareKey=62d1b8caf282b53132809708ebd18315" alt="1546156122709"></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这一篇文章我们简单的学习下服务的注册和发现，只需要导入相关的依赖，修改配置文件和启动类就可以了，最后为了安全起见还给Erureka Server增加了安全认证，下一篇文章在介绍服务端如何实现高可用。</p>
+<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><p>​    字符串 string 是 Redis 最简单的数据结构。Redis 所有的数据结构都是以唯一的 key 字符串作为名称，然后通过这个唯一 key 值来获取相应的 value 数据。不同类型的数据结构的差异就在于 value 的结构不一样。</p>
+<p>​    Redis的字符串是动态字符串，是可以修改的字符串，内部结构实现上类似于Java的ArrayList，采用预分配冗余空间的方式来减少内存的频繁分配，如图中所示，内部为当前字符串实际分配的空间capacity一般要高于实际字符串长度len。当字符串长度小于1M时，扩容都是加倍现有的空间，如果超过1M，扩容时一次只会多扩1M的空间。需要注意的是字符串最大长度为512M。​        </p>
+<p>​    在Redis里面，字符串可以存储以下3种类型的值。</p>
+<ul>
+<li>字符串（byte string）</li>
+<li>整数</li>
+<li>浮点数</li>
+</ul>
+<p>Redis字符串可以对存储的整数或者浮点数字符串执行自增或者自减等操作</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用例和描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>INCR</td>
+<td>INCR key—-将键存储的值加上1</td>
+</tr>
+<tr>
+<td>DECR</td>
+<td>DECR key—-将键存储的值减一</td>
+</tr>
+<tr>
+<td>INCRBY</td>
+<td>INCRBY key amount—-将键存储的值加上整数amount</td>
+</tr>
+<tr>
+<td>DECRBY</td>
+<td>DECRBY key amount—-将键存储的值减去整数amount</td>
+</tr>
+<tr>
+<td>INCRBYFLOAT</td>
+<td>INCRBYFLOAT key amount—-将键存储的值加上浮点数amount</td>
+</tr>
+</tbody>
+</table>
+<p>Redis除了自增操作和自减操作之外，还拥有对字符串的其中一部分内容进行读取或者写入的操作</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用例和描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>APPEND</td>
+<td>APPEND key value—-将将值value追加到给定键key-name当前存储的值末尾</td>
+</tr>
+<tr>
+<td>GETRANGE</td>
+<td>INCRBYFLOAT key start end—-获取一个由偏移量start至偏移量end范围内的所有字符组成的子串，包括start和end在内</td>
+</tr>
+<tr>
+<td>SETRANGE</td>
+<td>SETRANGEkey start value—-将从start偏移量开始的子串设置为给定值</td>
+</tr>
+<tr>
+<td>GETBIT</td>
+<td>GETBIT key offset—-将字符串看做是二进制位串，并返回位串中偏移量为offect的二进制位的值</td>
+</tr>
+<tr>
+<td>SETBIT</td>
+<td>SETBIT key offset —-将字符串看做是二进制位串，并将位串中偏移量为offect的二进制位的值设置为value</td>
+</tr>
+<tr>
+<td>BITCOUNT</td>
+<td>BITCOUNT key [start end]—-统计二进制字符串里面值为1的数量，可以给定范围，统计范围内1的个数</td>
+</tr>
+<tr>
+<td>BITTOP</td>
+<td>BITTOP operation dest-key key [key]—-对一个或者多个二进制位字符串执行并（and）、或（OR）、异或（XOR）、非（NOT）在内的任意一种按位运算操作，并将计算得出的结果保存在dest-key键里面</td>
+</tr>
+</tbody>
+</table>
+<h2 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h2><p>​    Redis 的列表相当于 Java 语言里面的 LinkedList，注意它是链表而不是数组。这意味着 list 的插入和删除操作非常快，时间复杂度为 O(1)，但是索引定位很慢，时间复杂度为 O(n)。Redis列表允许用户从序列的两端推入或者弹出元素获取元素，以及各种常用的列表操作。</p>
+<p>常用的列表处理命令</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用例和描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RPUSH</td>
+<td>RPUSH key value—-将一个或多个值推入列表的右端</td>
+</tr>
+<tr>
+<td>LRUSH</td>
+<td>LRUSH key value—-将一个或者多个值推入列表的左端</td>
+</tr>
+<tr>
+<td>RPOP</td>
+<td>RPOP key—-移除并返回列表最右端的元素</td>
+</tr>
+<tr>
+<td>LPOP</td>
+<td>LPOP key—-移除并返回列表最左端的元素</td>
+</tr>
+<tr>
+<td>LINDEX</td>
+<td>LINDEX key offset—-返回列表偏移量为offset的元素</td>
+</tr>
+<tr>
+<td>LRANGE</td>
+<td>LRANGE key start end—-返回列表从start偏移量到end偏移量范围内的所有元素。</td>
+</tr>
+<tr>
+<td>LTRIM</td>
+<td>LTRIM key start end—-对列表进行修剪，只保留偏移量start到end之间的元素</td>
+</tr>
+</tbody>
+</table>
+<p>Redis列表还可以将元素从一个列表移到另外一个列表，或者阻塞执行命令的客户端直到有其他客户端给列表添加元素为止。</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用例和描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BLPOP</td>
+<td>BLPOP key timeout—-从第一个非空列表中弹出位于最左端的元素，或者在timeout秒之内阻塞并等待可弹出的元素出现</td>
+</tr>
+<tr>
+<td>BRPOP</td>
+<td>BRPOP key timeout—-从第一个非空列表中弹出位于最右端的元素，或者在timeout秒之内阻塞并等待可弹出的元素</td>
+</tr>
+<tr>
+<td>RPOPLPUSH</td>
+<td>RPOPLPUSH key1 key2 从key1列表中弹出位于最右端的元素，然后将这个元素推入key2列表的最左端，并向用户返回这个元素</td>
+</tr>
+<tr>
+<td>BRPOPLPUSH</td>
+<td>BRPOPLPUSH key1 key2 timeout从key1列表中弹出位于最右端的元素，然后将这个元素推入key2列表的最左端，并向用户返回这个元素；如果key1为空，那么在timeout秒之内阻塞并等待可弹出的元素出现</td>
+</tr>
+</tbody>
+</table>
+<h2 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h2><p>​    Redis的集合以无序的方式来存储多个各不相同的元素，用户可以快速的的集合执行添加元素，移除元素，以及判断一个元素是否存在于集合中。</p>
+<p>​    Java程序员都知道HashSet的内部实现使用的是HashMap，只不过所有的value都指向同一个对象。Redis的set结构也是一样，它的内部也使用hash结构，所有的value都指向同一个内部值。</p>
+<p>一些常用集合命令</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用例和描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SADD</td>
+<td>SADD key item [item]—-将一个或多个元素添加到集合里面，并返回被添加元素当中原本并不存在于集合里面的元素数量</td>
+</tr>
+<tr>
+<td>SREM</td>
+<td>SREM key item [item]—-从集合里面移除一个或者多个元素，并返回被移除的元素数量</td>
+</tr>
+<tr>
+<td>SISMEMBER</td>
+<td>SISMEMBER key item—-检查元素item是否存在于集合key中</td>
+</tr>
+<tr>
+<td>SCARD</td>
+<td>SCARD key—-返回集合包含元素的数量</td>
+</tr>
+<tr>
+<td>SMEMBERS</td>
+<td>SMEMBERS key [count]—-返回集合包含的所有元素</td>
+</tr>
+<tr>
+<td>SRANDMEMBER</td>
+<td>SRANDMEMBER key [count]从集合里面随机的返回一个或者多个元素。当couut为正数时，命令返回的随机元素不会重复；当count为负数时，命令返回的随机元素可能会出现重复</td>
+</tr>
+<tr>
+<td>SPOP</td>
+<td>SPOP key—-随机的移除集合中的一个元素，并返回被移除的元素</td>
+</tr>
+<tr>
+<td>SMOVE</td>
+<td>SMOVE key1 key2 item—-如果key1包含元素item，那么从集合key1里面移除元素，并将元素item添加到集合key2中，如果item被成功的移除，那么命令返回1，否则返回0</td>
+</tr>
+</tbody>
+</table>
+<p>集合除了基本的添加，移除元素外，还可以组合和关联多个集合</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用例和描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SDIFF</td>
+<td>SDIFF key [key]—-返回那些存在于第一个集合，但不存在于其他集合中的元素（差集）</td>
+</tr>
+<tr>
+<td>SDIFFSTORE</td>
+<td>SDIFFSTORE key1 key2 [key]—将那些存在于第一个集合但不存在于其他集合中的元素（差集），存储到key1中</td>
+</tr>
+<tr>
+<td>SINTER</td>
+<td>SINTER key [key]—-返回那些同时存在于所有集合中的元素（交集）</td>
+</tr>
+<tr>
+<td>SINTRTSTORE</td>
+<td>SINTRTSTORE key1 key2 [key]—将那些同时存在于所有集合中的元素（交集）存储到key1里面</td>
+</tr>
+<tr>
+<td>SUNION</td>
+<td>SUNION key [key]—-返回那些至少存在于一个集合中的元素（并集）</td>
+</tr>
+<tr>
+<td>SUNIONSTORE</td>
+<td>SUNIONSTORE key1 key2 [key]—-将那些那些至少存在于一个集合中的元素（并集）存储到key1里面</td>
+</tr>
+</tbody>
+</table>
+<h2 id="散列"><a href="#散列" class="headerlink" title="散列"></a>散列</h2><p>​    Redis的散列可以让用户将多个键值对存储到一个Redis键里面。从功能是来说。Redis为散列值提供了一些与字符串值相同的特性，使得散列非常适用于将一些相关的数据存储在一起。</p>
+<p>​    哈希等价于Java语言的HashMap或者是Python语言的dict，在实现结构上它使用二维结构，第一维是数组，第二维是链表，hash的内容key和value存放在链表中，数组里存放的是链表的头指针。通过key查找元素时，先计算key的hashcode，然后用hashcode对数组的长度进行取模定位到链表的表头，再对链表进行遍历获取到相应的value值，链表的作用就是用来将产生了「hash碰撞」的元素串起来。Java语言开发者会感到非常熟悉，因为这样的结构和HashMap是没有区别的。哈希的第一维数组的长度也是2^n。</p>
+<p>散列的基本命令</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用例和描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HMGET</td>
+<td>HMGET key -name key [key]—-从散列里面获取一个或者多个键的值</td>
+</tr>
+<tr>
+<td>HMSET</td>
+<td>HMSET key-name key value [key value]—-为散列里面一个或者多个键设置值</td>
+</tr>
+<tr>
+<td>HDEL</td>
+<td>HDEL key-name key [key]—-删除散列里面一个或者多个键值对，返回成功找到并删除的键值对数量</td>
+</tr>
+<tr>
+<td>HLEN</td>
+<td>HLEN key-name—-返回散列包含的键值对数量</td>
+</tr>
+</tbody>
+</table>
+<p>其他几个批量操作命令,以及一些和字符串操作类似的散列命令</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用例和描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HEXISTS</td>
+<td>HEXISTS key-name key—-检查给定键是否存在于散列中</td>
+</tr>
+<tr>
+<td>HKEYS</td>
+<td>HKEYS key-name —-获取散列包含的所有键</td>
+</tr>
+<tr>
+<td>HVALS</td>
+<td>HVALS key-name—-获取散列包含的所有值</td>
+</tr>
+<tr>
+<td>HGETALL</td>
+<td>HGETALLkey-name—-获取散列包含的所有键值对</td>
+</tr>
+<tr>
+<td>HINCRBY</td>
+<td>HINCRBY key-name key increment—-将键key存储的值加上整数increment</td>
+</tr>
+<tr>
+<td>HINCRBYFLOAT</td>
+<td>HINCRBYFLOAT key-name key increment—-将键key存储的值加上浮点数increment</td>
+</tr>
+</tbody>
+</table>
+<h2 id="有序集合"><a href="#有序集合" class="headerlink" title="有序集合"></a>有序集合</h2><p>​    和散列存储着键与值之间的隐射类似，有序集合也存储着成员与分值之间的映射，并且提供了分值处理命令，以及根据分值大小有序的获取或扫描成员和分值的命令。</p>
+<p>​    SortedSet(zset)是Redis提供的一个非常特别的数据结构，一方面它等价于Java的数据结构<code>Map&lt;String, Double&gt;</code>，可以给每一个元素value赋予一个权重<code>score</code>，另一方面它又类似于<code>TreeSet</code>，内部的元素会按照权重score进行排序，可以得到每个元素的名次，还可以通过score的范围来获取元素的列表。</p>
+<p>一些常用的有序集合命令</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用例和描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ZADD</td>
+<td>ZADD key socre member [score member]—-将带有给定分支的成员添加到有序集合里面</td>
+</tr>
+<tr>
+<td>ZREM</td>
+<td>ZREM key member [member]—-从有序集合里面移除给定的成员，并返回被移除成员的数量</td>
+</tr>
+<tr>
+<td>ZCRD</td>
+<td>ZCRD key—-返回有序集合包含的成员数量</td>
+</tr>
+<tr>
+<td>ZINCRBY</td>
+<td>ZINCRBY key increment member—-将member成员的分值加上increment</td>
+</tr>
+<tr>
+<td>ZCOUNT</td>
+<td>ZCOUNT key min max—-返回分值介于min和max之间的成员数量</td>
+</tr>
+<tr>
+<td>ZRANX</td>
+<td>ZRANX key member—-返回成员member在有序集合中的排名</td>
+</tr>
+<tr>
+<td>ZSCORE</td>
+<td>ZSCORE key member—-返回成员member的分值</td>
+</tr>
+<tr>
+<td>ZRANGE</td>
+<td>ZRANGE key start stop [WITHSCORES]—-返回有序集合中排名介于start和stop之间的成员，如果给定了可选的WITHSCORES选项，那么命令会将成员的分值也一并返回</td>
+</tr>
+</tbody>
+</table>
+<p>有序集合的范围型数据获取命令和范围型数据删除命令，以及并集命令和交集命令</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用例和描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ZREVRANK</td>
+<td>ZREVRANK key member—-返回有序集合里成员member的排名，成员按照分值从大到小排列</td>
+</tr>
+<tr>
+<td>ZREVRANGE</td>
+<td>ZREVRANGE key start stop [WITHSCORES]—-返回有序集合给定排名范围内的成员，成员按照分值从大到小排列</td>
+</tr>
+<tr>
+<td>ZRANGEBYSCORE</td>
+<td>ZRANGEBYSCORE key min max [WITHSCORES] —-返回有序集合中，分值介于min和max之间的成员</td>
+</tr>
+<tr>
+<td>ZREVRANGEBYSCORE</td>
+<td>ZREVRANGEBYSCORE key max min [WITHSCORES]—-获取有序集合中分值排名介于min和max之间的所有成员，并按照分值从大到小的顺序来返回它们</td>
+</tr>
+<tr>
+<td>ZREMRANGEBYRANK</td>
+<td>ZREMRANGEBYRANK key start stop–移除有序集合中分值介于min 和 max之间的所有成员</td>
+</tr>
+<tr>
+<td>ZREMRANGEBYSCORE</td>
+<td>ZREMRANGEBYSCORE key min max—-移除有序集合中分值介于min和max之间的所有成员</td>
+</tr>
+<tr>
+<td>ZINTERSTORE</td>
+<td>ZINTERSTORE   key1 key1-count key2 [key]—-对给定的有序集合执行类似集合的交集运算</td>
+</tr>
+<tr>
+<td>ZUNIONSTORE</td>
+<td>ZUNIONSTORE key key-count key [key] 对给定的有序集合执行类似于集合的并集运算</td>
+</tr>
+</tbody>
+</table>
 </the></excerpt>
       
     </div>
@@ -385,13 +719,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2019/01/07/Spring Cloud 服务注册和发现/">Spring Cloud 服务注册和发现</a></p>
+        <p><span>本文标题:</span><a href="/2019/01/19/redis深入学习之5种基本数据类型/">Redis深入学习之5种基本数据类型</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">dailn</a></p>
-        <p><span>发布时间:</span>2019-01-07, 21:19:15</p>
-        <p><span>最后更新:</span>2019-01-07, 21:22:00</p>
+        <p><span>发布时间:</span>2019-01-19, 15:06:38</p>
+        <p><span>最后更新:</span>2019-01-20, 01:26:57</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2019/01/07/Spring Cloud 服务注册和发现/" title="Spring Cloud 服务注册和发现">http://yoursite.com/2019/01/07/Spring Cloud 服务注册和发现/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/01/07/Spring Cloud 服务注册和发现/　　作者: dailn" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2019/01/19/redis深入学习之5种基本数据类型/" title="Redis深入学习之5种基本数据类型">http://yoursite.com/2019/01/19/redis深入学习之5种基本数据类型/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/01/19/redis深入学习之5种基本数据类型/　　作者: dailn" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -404,15 +738,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2019/01/07/Spring Cloud 服务端高可用/">
-                    Spring Cloud 服务端高可用
+                <a href="/2019/01/21/redis深入学习之实现主动和哨兵/">
+                    redis深入学习之实现主从和哨兵
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2019/01/06/啃透Java并发之死锁篇/">
-                    啃透Java并发之死锁篇
+                <a href="/2019/01/13/markdown插入本地图片小策略/">
+                    markdown插入本地图片小技巧
                 </a>
             </div>
         
@@ -424,7 +758,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-Cloud-服务注册和发现"><span class="toc-number">1.</span> <span class="toc-text">Spring Cloud 服务注册和发现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#搭建服务注册中心"><span class="toc-number">1.1.</span> <span class="toc-text">搭建服务注册中心</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#导入maven依赖"><span class="toc-number">1.1.1.</span> <span class="toc-text">导入maven依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改配置文件"><span class="toc-number">1.1.2.</span> <span class="toc-text">修改配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改启动类"><span class="toc-number">1.1.3.</span> <span class="toc-text">修改启动类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#启动"><span class="toc-number">1.1.4.</span> <span class="toc-text">启动</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#搭建Eureka客户端"><span class="toc-number">1.2.</span> <span class="toc-text">搭建Eureka客户端</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#导入maven依赖-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">导入maven依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改配置文件-1"><span class="toc-number">1.2.2.</span> <span class="toc-text">修改配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改启动类-1"><span class="toc-number">1.2.3.</span> <span class="toc-text">修改启动类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#启动-1"><span class="toc-number">1.2.4.</span> <span class="toc-text">启动</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Eureka-Server增加安全用户认证"><span class="toc-number">1.3.</span> <span class="toc-text">Eureka Server增加安全用户认证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#配置访问用户名和密码"><span class="toc-number">1.3.1.</span> <span class="toc-text">配置访问用户名和密码</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#访问注册中心管理页面"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">访问注册中心管理页面</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#客户端再次注册"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">客户端再次注册</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.4.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis-5种基本数据类型"><span class="toc-number">1.</span> <span class="toc-text">Redis 5种基本数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字符串"><span class="toc-number">1.2.</span> <span class="toc-text">字符串</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#列表"><span class="toc-number">1.3.</span> <span class="toc-text">列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集合"><span class="toc-number">1.4.</span> <span class="toc-text">集合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#散列"><span class="toc-number">1.5.</span> <span class="toc-text">散列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有序集合"><span class="toc-number">1.6.</span> <span class="toc-text">有序集合</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -460,7 +794,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"Spring Cloud 服务注册和发现　| dailn的个人博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"Redis深入学习之5种基本数据类型　| dailn的个人博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -502,7 +836,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2019/01/07/Spring Cloud 服务端高可用/" title="上一篇: Spring Cloud 服务端高可用">
+            <a href="/2019/01/21/redis深入学习之实现主动和哨兵/" title="上一篇: redis深入学习之实现主从和哨兵">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -510,7 +844,7 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2019/01/06/啃透Java并发之死锁篇/" title="下一篇: 啃透Java并发之死锁篇">
+            <a href="/2019/01/13/markdown插入本地图片小策略/" title="下一篇: markdown插入本地图片小技巧">
                 <i class="fa fa-angle-right"></i>
             </a>
         
