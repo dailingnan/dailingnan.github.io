@@ -15,18 +15,18 @@
 
 
 
-<meta name="description" content="Redis 5种基本数据类型前言​    redis平时还是经常使用的，但是只是停留在基本使用上面，5种基本的数据类型基本也只是用了字符串，觉得还是有必要深入学习下Redis，从5种基本数据类型开始。">
+<meta name="description" content="Redis数据持久化 前言​    Redis 的数据全部在内存里，之所以需要持久化在硬盘是为了在之后能重用数据，或者是为了防止系统故障、宕机导致内存中的数据全部丢失。另外，存储在Redis中的数据有可能是经过长时间计算得出的，或者有程序正在使用Redis存储的数据进行计算，所以用户会希望自己可以将这些数据存储起来以便之后使用，不需要重新计算了。 ​    Redis提供了两种不同的持久化方">
 <meta name="keywords" content="微缓存,Redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis深入学习之5种基本数据类型">
-<meta property="og:url" content="http://yoursite.com/2019/01/19/redis深入学习之5种基本数据类型/index.html">
+<meta property="og:title" content="redis深入学习之数据持久化">
+<meta property="og:url" content="http://yoursite.com/2019/01/26/redis深入学习之数据持久化/index.html">
 <meta property="og:site_name" content="dailn的个人博客">
-<meta property="og:description" content="Redis 5种基本数据类型前言​    redis平时还是经常使用的，但是只是停留在基本使用上面，5种基本的数据类型基本也只是用了字符串，觉得还是有必要深入学习下Redis，从5种基本数据类型开始。">
+<meta property="og:description" content="Redis数据持久化 前言​    Redis 的数据全部在内存里，之所以需要持久化在硬盘是为了在之后能重用数据，或者是为了防止系统故障、宕机导致内存中的数据全部丢失。另外，存储在Redis中的数据有可能是经过长时间计算得出的，或者有程序正在使用Redis存储的数据进行计算，所以用户会希望自己可以将这些数据存储起来以便之后使用，不需要重新计算了。 ​    Redis提供了两种不同的持久化方">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-20T17:50:57.393Z">
+<meta property="og:updated_time" content="2019-01-26T05:26:00.997Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Redis深入学习之5种基本数据类型">
-<meta name="twitter:description" content="Redis 5种基本数据类型前言​    redis平时还是经常使用的，但是只是停留在基本使用上面，5种基本的数据类型基本也只是用了字符串，觉得还是有必要深入学习下Redis，从5种基本数据类型开始。">
+<meta name="twitter:title" content="redis深入学习之数据持久化">
+<meta name="twitter:description" content="Redis数据持久化 前言​    Redis 的数据全部在内存里，之所以需要持久化在硬盘是为了在之后能重用数据，或者是为了防止系统故障、宕机导致内存中的数据全部丢失。另外，存储在Redis中的数据有可能是经过长时间计算得出的，或者有程序正在使用Redis存储的数据进行计算，所以用户会希望自己可以将这些数据存储起来以便之后使用，不需要重新计算了。 ​    Redis提供了两种不同的持久化方">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -58,7 +58,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Redis深入学习之5种基本数据类型 | dailn的个人博客</title>
+<title>redis深入学习之数据持久化 | dailn的个人博客</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -271,11 +271,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我">
 </nav>
-      <div class="body-wrap"><article id="post-redis深入学习之5种基本数据类型" class="article article-type-post" itemscope="" itemprop="blogPost">
+      <div class="body-wrap"><article id="post-redis深入学习之数据持久化" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2019/01/19/redis深入学习之5种基本数据类型/" class="article-date">
-      <time datetime="2019-01-19T07:06:38.000Z" itemprop="datePublished">2019-01-19</time>
+      <a href="/2019/01/26/redis深入学习之数据持久化/" class="article-date">
+      <time datetime="2019-01-26T03:00:23.000Z" itemprop="datePublished">2019-01-26</time>
 </a>
 
 
@@ -290,7 +290,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Redis深入学习之5种基本数据类型
+      redis深入学习之数据持久化
     </h1>
   
 
@@ -300,7 +300,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">3k字</span>
+        <span class="post-count">2.6k字</span>
       </span>
     </span>
 
@@ -309,7 +309,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-hourglass-half"></i>
         <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">11分</span>
+        <span class="post-count">9分</span>
       </span>
     </span>
 </div>
@@ -339,388 +339,73 @@
           
         <excerpt in="" index="" |="" 首页摘要=""> 
 
-<h1 id="Redis-5种基本数据类型"><a href="#Redis-5种基本数据类型" class="headerlink" title="Redis 5种基本数据类型"></a>Redis 5种基本数据类型</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>​    redis平时还是经常使用的，但是只是停留在基本使用上面，5种基本的数据类型基本也只是用了字符串，觉得还是有必要深入学习下Redis，从5种基本数据类型开始。</p>
-<a id="more"></a>
-<the rest="" of="" contents="" |="" 余下全文="">
-
-<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><p>​    字符串 string 是 Redis 最简单的数据结构。Redis 所有的数据结构都是以唯一的 key 字符串作为名称，然后通过这个唯一 key 值来获取相应的 value 数据。不同类型的数据结构的差异就在于 value 的结构不一样。</p>
-<p>​    Redis的字符串是动态字符串，是可以修改的字符串，内部结构实现上类似于Java的ArrayList，采用预分配冗余空间的方式来减少内存的频繁分配，如图中所示，内部为当前字符串实际分配的空间capacity一般要高于实际字符串长度len。当字符串长度小于1M时，扩容都是加倍现有的空间，如果超过1M，扩容时一次只会多扩1M的空间。需要注意的是字符串最大长度为512M。​        </p>
-<p>​    在Redis里面，字符串可以存储以下3种类型的值。</p>
-<ul>
-<li>字符串（byte string）</li>
-<li>整数</li>
-<li>浮点数</li>
+<h1 id="Redis数据持久化"><a href="#Redis数据持久化" class="headerlink" title="Redis数据持久化"></a>Redis数据持久化</h1><p><br></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>​    Redis 的数据全部在内存里，之所以需要持久化在硬盘是为了在之后能重用数据，或者是为了防止系统故障、宕机导致内存中的数据全部丢失。另外，存储在Redis中的数据有可能是经过长时间计算得出的，或者有程序正在使用Redis存储的数据进行计算，所以用户会希望自己可以将这些数据存储起来以便之后使用，不需要重新计算了。</p>
+<p>​    Redis提供了<strong>两种不同的持久化方法</strong>来将数据存储到硬盘里面。一种方法叫<strong>快照（RDB）</strong>，他可以将存在于某一时刻的数据都写入硬盘里面。另外一种方法叫做<strong>只追加文件（AOF）</strong>,他会在执行写命令时，将被执行的命令写入硬盘里面。这两种持久化方法既可以同时使用，又可以单独使用，在某些情况下甚至两种方法都不使用，具体选择哪种持久化方法需要根据用户的数据以及应用来决定。</p>
+<p><br></p>
+<h2 id="快照持久化"><a href="#快照持久化" class="headerlink" title="快照持久化"></a>快照持久化</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>​    Redis可以通过创建快照来获得存储在内存里面的数据在某个时间点上的副本。在创建快照之后，用户可以对快照进行备份，可以讲快照复制到其他服务器从而创建具有相同数据的服务器副本，还可以将快照留在原地以便重启服务器时使用。</p>
+<h3 id="创建快照-RDB-的方法"><a href="#创建快照-RDB-的方法" class="headerlink" title="创建快照(RDB)的方法"></a>创建快照(RDB)的方法</h3><ol>
+<li>客户端可以通过向Redis发送BGSAVE命令来创建一个快照。对于支持BGSAVE命令的平台来说（基本所有的平台都只支持，除了windows平台），Redis会调用fork来创建一个子进程，然后子进程负责将快照写入磁盘，而父进程则继续处理命令请求。</li>
+<li>客户端还可以通过向Redis发送SAVE命令来创建一个快照，接到SAVE命令的Redis服务器在快照创建完毕之前将不再响应任何其他命令。SAVE命令并不常用，我们通常只会在没有足够内存区执行BGSAVE命令的情况下，又或者即时等待持久化操作执行完毕也无所谓的情况下，才会使用这个命令。</li>
+<li>如果用户设置了save配置选项，比如 <code>save 60 10000</code>，那么从Redis最近一次创建快照之后开始算起，当“60秒之内有10000次写入”，这个条件被满足时，Redis就会自动触发BGSAVE命令。如果 用户设置了多个save配置选项，那么当任意一个save配置选项所设置的条件被满足时，Redis就会触发一次BGSAVE命令。</li>
+<li>当Redis通过SHUTDOWN命令接收到关闭服务器的请求时，或者接收到标准TERM信号时，会执行一个SAVE命令，阻塞所有的客户端，不在执行客户端发送的任何命令，并在SAVE命令执行完毕之后关闭服务器。</li>
+<li>当一个Redis服务器连接另一个Redis服务器，并向对象发送SYNC命令来开始一次复制操作的时候，如果主服务器目前没有在执行BGSAVE操作，或者主服务器并非刚刚执行完BGSAVE操作，那么主服务器就会执行BGSAVE命令。</li>
+</ol>
+<h3 id="RDB优缺点"><a href="#RDB优缺点" class="headerlink" title="RDB优缺点"></a>RDB优缺点</h3><ul>
+<li>RDB会生成多个数据文件，每个数据文件都代表了某一个时刻中 redis 的数据，这种多个数据文件的方式，<strong>非常适合做冷备</strong>，可以将这种完整的数据文件发送到一些远程的安全存储上去，比如说 Amazon 的 S3 云服务上去，在国内可以是阿里云的 ODPS 分布式存储上，以预定好的备份策略来定期备份redis中的数据。</li>
+<li>RDB 对 redis 对外提供的读写服务，影响非常小，可以让 redis <strong>保持高性能</strong>，因为 redis 主进程只需要 fork 一个子进程，让子进程执行磁盘 IO 操作来进行 RDB 持久化即可。</li>
+<li>相对于 AOF 持久化机制来说，直接基于 RDB 数据文件来重启和恢复 redis 进程，更加快速。</li>
+<li>如果想要在 redis 故障时，尽可能少的丢失数据，那么 RDB 没有 AOF 好。一般来说，RDB 数据快照文件，都是每隔 5 分钟，或者更长时间生成一次，这个时候就得接受一旦 redis 进程宕机，那么会丢失最近 5 分钟的数据。</li>
+<li>RDB 每次在 fork 子进程来执行 RDB 快照数据文件生成的时候，如果数据文件特别大，可能会导致对客户端提供的服务暂停数毫秒，或者甚至数秒。</li>
 </ul>
-<p>Redis字符串可以对存储的整数或者浮点数字符串执行自增或者自减等操作</p>
+<p><br></p>
+<h2 id="AOF持久化"><a href="#AOF持久化" class="headerlink" title="AOF持久化"></a>AOF持久化</h2><h3 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h3><p>​    简单的来说，AOF持久化会将被执行的写命令写到AOF文件的末尾，以此来记录数据发生的变化。因此，Redis只要从头到尾重新执行以此AOF文件包含的所有写命令，就可以恢复AOF文件所记录的数据集。</p>
+<h3 id="打开及配置AOF持久化"><a href="#打开及配置AOF持久化" class="headerlink" title="打开及配置AOF持久化"></a>打开及配置AOF持久化</h3><p>​    AOF持久化可以通过配置<code>appendonly yes</code>配置选项来打开。然后可以通过配置<code>appendfsync</code>配置选项对AOF文件的同步频率。</p>
 <table>
 <thead>
 <tr>
-<th>命令</th>
-<th>用例和描述</th>
+<th>选项</th>
+<th>同步频率</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>INCR</td>
-<td>INCR key—-将键存储的值加上1</td>
+<td>alawys</td>
+<td>每个Redis写命令都要同步写入硬盘，这样做会严重降低Redis的速度</td>
 </tr>
 <tr>
-<td>DECR</td>
-<td>DECR key—-将键存储的值减一</td>
+<td>everysec</td>
+<td>每秒执行一次同步，显式的将多个写命令同步到硬盘</td>
 </tr>
 <tr>
-<td>INCRBY</td>
-<td>INCRBY key amount—-将键存储的值加上整数amount</td>
-</tr>
-<tr>
-<td>DECRBY</td>
-<td>DECRBY key amount—-将键存储的值减去整数amount</td>
-</tr>
-<tr>
-<td>INCRBYFLOAT</td>
-<td>INCRBYFLOAT key amount—-将键存储的值加上浮点数amount</td>
+<td>no</td>
+<td>让操作系统来决定应该何时进行同步</td>
 </tr>
 </tbody>
 </table>
-<p>Redis除了自增操作和自减操作之外，还拥有对字符串的其中一部分内容进行读取或者写入的操作</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例和描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>APPEND</td>
-<td>APPEND key value—-将将值value追加到给定键key-name当前存储的值末尾</td>
-</tr>
-<tr>
-<td>GETRANGE</td>
-<td>INCRBYFLOAT key start end—-获取一个由偏移量start至偏移量end范围内的所有字符组成的子串，包括start和end在内</td>
-</tr>
-<tr>
-<td>SETRANGE</td>
-<td>SETRANGEkey start value—-将从start偏移量开始的子串设置为给定值</td>
-</tr>
-<tr>
-<td>GETBIT</td>
-<td>GETBIT key offset—-将字符串看做是二进制位串，并返回位串中偏移量为offect的二进制位的值</td>
-</tr>
-<tr>
-<td>SETBIT</td>
-<td>SETBIT key offset —-将字符串看做是二进制位串，并将位串中偏移量为offect的二进制位的值设置为value</td>
-</tr>
-<tr>
-<td>BITCOUNT</td>
-<td>BITCOUNT key [start end]—-统计二进制字符串里面值为1的数量，可以给定范围，统计范围内1的个数</td>
-</tr>
-<tr>
-<td>BITTOP</td>
-<td>BITTOP operation dest-key key [key]—-对一个或者多个二进制位字符串执行并（and）、或（OR）、异或（XOR）、非（NOT）在内的任意一种按位运算操作，并将计算得出的结果保存在dest-key键里面</td>
-</tr>
-</tbody>
-</table>
-<h2 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h2><p>​    Redis 的列表相当于 Java 语言里面的 LinkedList，注意它是链表而不是数组。这意味着 list 的插入和删除操作非常快，时间复杂度为 O(1)，但是索引定位很慢，时间复杂度为 O(n)。Redis列表允许用户从序列的两端推入或者弹出元素获取元素，以及各种常用的列表操作。</p>
-<p>常用的列表处理命令</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例和描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>RPUSH</td>
-<td>RPUSH key value—-将一个或多个值推入列表的右端</td>
-</tr>
-<tr>
-<td>LRUSH</td>
-<td>LRUSH key value—-将一个或者多个值推入列表的左端</td>
-</tr>
-<tr>
-<td>RPOP</td>
-<td>RPOP key—-移除并返回列表最右端的元素</td>
-</tr>
-<tr>
-<td>LPOP</td>
-<td>LPOP key—-移除并返回列表最左端的元素</td>
-</tr>
-<tr>
-<td>LINDEX</td>
-<td>LINDEX key offset—-返回列表偏移量为offset的元素</td>
-</tr>
-<tr>
-<td>LRANGE</td>
-<td>LRANGE key start end—-返回列表从start偏移量到end偏移量范围内的所有元素。</td>
-</tr>
-<tr>
-<td>LTRIM</td>
-<td>LTRIM key start end—-对列表进行修剪，只保留偏移量start到end之间的元素</td>
-</tr>
-</tbody>
-</table>
-<p>Redis列表还可以将元素从一个列表移到另外一个列表，或者阻塞执行命令的客户端直到有其他客户端给列表添加元素为止。</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例和描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>BLPOP</td>
-<td>BLPOP key timeout—-从第一个非空列表中弹出位于最左端的元素，或者在timeout秒之内阻塞并等待可弹出的元素出现</td>
-</tr>
-<tr>
-<td>BRPOP</td>
-<td>BRPOP key timeout—-从第一个非空列表中弹出位于最右端的元素，或者在timeout秒之内阻塞并等待可弹出的元素</td>
-</tr>
-<tr>
-<td>RPOPLPUSH</td>
-<td>RPOPLPUSH key1 key2 从key1列表中弹出位于最右端的元素，然后将这个元素推入key2列表的最左端，并向用户返回这个元素</td>
-</tr>
-<tr>
-<td>BRPOPLPUSH</td>
-<td>BRPOPLPUSH key1 key2 timeout从key1列表中弹出位于最右端的元素，然后将这个元素推入key2列表的最左端，并向用户返回这个元素；如果key1为空，那么在timeout秒之内阻塞并等待可弹出的元素出现</td>
-</tr>
-</tbody>
-</table>
-<h2 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h2><p>​    Redis的集合以无序的方式来存储多个各不相同的元素，用户可以快速的的集合执行添加元素，移除元素，以及判断一个元素是否存在于集合中。</p>
-<p>​    Java程序员都知道HashSet的内部实现使用的是HashMap，只不过所有的value都指向同一个对象。Redis的set结构也是一样，它的内部也使用hash结构，所有的value都指向同一个内部值。</p>
-<p>一些常用集合命令</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例和描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SADD</td>
-<td>SADD key item [item]—-将一个或多个元素添加到集合里面，并返回被添加元素当中原本并不存在于集合里面的元素数量</td>
-</tr>
-<tr>
-<td>SREM</td>
-<td>SREM key item [item]—-从集合里面移除一个或者多个元素，并返回被移除的元素数量</td>
-</tr>
-<tr>
-<td>SISMEMBER</td>
-<td>SISMEMBER key item—-检查元素item是否存在于集合key中</td>
-</tr>
-<tr>
-<td>SCARD</td>
-<td>SCARD key—-返回集合包含元素的数量</td>
-</tr>
-<tr>
-<td>SMEMBERS</td>
-<td>SMEMBERS key [count]—-返回集合包含的所有元素</td>
-</tr>
-<tr>
-<td>SRANDMEMBER</td>
-<td>SRANDMEMBER key [count]从集合里面随机的返回一个或者多个元素。当couut为正数时，命令返回的随机元素不会重复；当count为负数时，命令返回的随机元素可能会出现重复</td>
-</tr>
-<tr>
-<td>SPOP</td>
-<td>SPOP key—-随机的移除集合中的一个元素，并返回被移除的元素</td>
-</tr>
-<tr>
-<td>SMOVE</td>
-<td>SMOVE key1 key2 item—-如果key1包含元素item，那么从集合key1里面移除元素，并将元素item添加到集合key2中，如果item被成功的移除，那么命令返回1，否则返回0</td>
-</tr>
-</tbody>
-</table>
-<p>集合除了基本的添加，移除元素外，还可以组合和关联多个集合</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例和描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SDIFF</td>
-<td>SDIFF key [key]—-返回那些存在于第一个集合，但不存在于其他集合中的元素（差集）</td>
-</tr>
-<tr>
-<td>SDIFFSTORE</td>
-<td>SDIFFSTORE key1 key2 [key]—将那些存在于第一个集合但不存在于其他集合中的元素（差集），存储到key1中</td>
-</tr>
-<tr>
-<td>SINTER</td>
-<td>SINTER key [key]—-返回那些同时存在于所有集合中的元素（交集）</td>
-</tr>
-<tr>
-<td>SINTRTSTORE</td>
-<td>SINTRTSTORE key1 key2 [key]—将那些同时存在于所有集合中的元素（交集）存储到key1里面</td>
-</tr>
-<tr>
-<td>SUNION</td>
-<td>SUNION key [key]—-返回那些至少存在于一个集合中的元素（并集）</td>
-</tr>
-<tr>
-<td>SUNIONSTORE</td>
-<td>SUNIONSTORE key1 key2 [key]—-将那些那些至少存在于一个集合中的元素（并集）存储到key1里面</td>
-</tr>
-</tbody>
-</table>
-<h2 id="散列"><a href="#散列" class="headerlink" title="散列"></a>散列</h2><p>​    Redis的散列可以让用户将多个键值对存储到一个Redis键里面。从功能是来说。Redis为散列值提供了一些与字符串值相同的特性，使得散列非常适用于将一些相关的数据存储在一起。</p>
-<p>​    哈希等价于Java语言的HashMap或者是Python语言的dict，在实现结构上它使用二维结构，第一维是数组，第二维是链表，hash的内容key和value存放在链表中，数组里存放的是链表的头指针。通过key查找元素时，先计算key的hashcode，然后用hashcode对数组的长度进行取模定位到链表的表头，再对链表进行遍历获取到相应的value值，链表的作用就是用来将产生了「hash碰撞」的元素串起来。Java语言开发者会感到非常熟悉，因为这样的结构和HashMap是没有区别的。哈希的第一维数组的长度也是2^n。</p>
-<p>散列的基本命令</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例和描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>HMGET</td>
-<td>HMGET key -name key [key]—-从散列里面获取一个或者多个键的值</td>
-</tr>
-<tr>
-<td>HMSET</td>
-<td>HMSET key-name key value [key value]—-为散列里面一个或者多个键设置值</td>
-</tr>
-<tr>
-<td>HDEL</td>
-<td>HDEL key-name key [key]—-删除散列里面一个或者多个键值对，返回成功找到并删除的键值对数量</td>
-</tr>
-<tr>
-<td>HLEN</td>
-<td>HLEN key-name—-返回散列包含的键值对数量</td>
-</tr>
-</tbody>
-</table>
-<p>其他几个批量操作命令,以及一些和字符串操作类似的散列命令</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例和描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>HEXISTS</td>
-<td>HEXISTS key-name key—-检查给定键是否存在于散列中</td>
-</tr>
-<tr>
-<td>HKEYS</td>
-<td>HKEYS key-name —-获取散列包含的所有键</td>
-</tr>
-<tr>
-<td>HVALS</td>
-<td>HVALS key-name—-获取散列包含的所有值</td>
-</tr>
-<tr>
-<td>HGETALL</td>
-<td>HGETALLkey-name—-获取散列包含的所有键值对</td>
-</tr>
-<tr>
-<td>HINCRBY</td>
-<td>HINCRBY key-name key increment—-将键key存储的值加上整数increment</td>
-</tr>
-<tr>
-<td>HINCRBYFLOAT</td>
-<td>HINCRBYFLOAT key-name key increment—-将键key存储的值加上浮点数increment</td>
-</tr>
-</tbody>
-</table>
-<h2 id="有序集合"><a href="#有序集合" class="headerlink" title="有序集合"></a>有序集合</h2><p>​    和散列存储着键与值之间的隐射类似，有序集合也存储着成员与分值之间的映射，并且提供了分值处理命令，以及根据分值大小有序的获取或扫描成员和分值的命令。</p>
-<p>​    SortedSet(zset)是Redis提供的一个非常特别的数据结构，一方面它等价于Java的数据结构<code>Map&lt;String, Double&gt;</code>，可以给每一个元素value赋予一个权重<code>score</code>，另一方面它又类似于<code>TreeSet</code>，内部的元素会按照权重score进行排序，可以得到每个元素的名次，还可以通过score的范围来获取元素的列表。</p>
-<p>一些常用的有序集合命令</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例和描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ZADD</td>
-<td>ZADD key socre member [score member]—-将带有给定分支的成员添加到有序集合里面</td>
-</tr>
-<tr>
-<td>ZREM</td>
-<td>ZREM key member [member]—-从有序集合里面移除给定的成员，并返回被移除成员的数量</td>
-</tr>
-<tr>
-<td>ZCRD</td>
-<td>ZCRD key—-返回有序集合包含的成员数量</td>
-</tr>
-<tr>
-<td>ZINCRBY</td>
-<td>ZINCRBY key increment member—-将member成员的分值加上increment</td>
-</tr>
-<tr>
-<td>ZCOUNT</td>
-<td>ZCOUNT key min max—-返回分值介于min和max之间的成员数量</td>
-</tr>
-<tr>
-<td>ZRANX</td>
-<td>ZRANX key member—-返回成员member在有序集合中的排名</td>
-</tr>
-<tr>
-<td>ZSCORE</td>
-<td>ZSCORE key member—-返回成员member的分值</td>
-</tr>
-<tr>
-<td>ZRANGE</td>
-<td>ZRANGE key start stop [WITHSCORES]—-返回有序集合中排名介于start和stop之间的成员，如果给定了可选的WITHSCORES选项，那么命令会将成员的分值也一并返回</td>
-</tr>
-</tbody>
-</table>
-<p>有序集合的范围型数据获取命令和范围型数据删除命令，以及并集命令和交集命令</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例和描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ZREVRANK</td>
-<td>ZREVRANK key member—-返回有序集合里成员member的排名，成员按照分值从大到小排列</td>
-</tr>
-<tr>
-<td>ZREVRANGE</td>
-<td>ZREVRANGE key start stop [WITHSCORES]—-返回有序集合给定排名范围内的成员，成员按照分值从大到小排列</td>
-</tr>
-<tr>
-<td>ZRANGEBYSCORE</td>
-<td>ZRANGEBYSCORE key min max [WITHSCORES] —-返回有序集合中，分值介于min和max之间的成员</td>
-</tr>
-<tr>
-<td>ZREVRANGEBYSCORE</td>
-<td>ZREVRANGEBYSCORE key max min [WITHSCORES]—-获取有序集合中分值排名介于min和max之间的所有成员，并按照分值从大到小的顺序来返回它们</td>
-</tr>
-<tr>
-<td>ZREMRANGEBYRANK</td>
-<td>ZREMRANGEBYRANK key start stop–移除有序集合中分值介于min 和 max之间的所有成员</td>
-</tr>
-<tr>
-<td>ZREMRANGEBYSCORE</td>
-<td>ZREMRANGEBYSCORE key min max—-移除有序集合中分值介于min和max之间的所有成员</td>
-</tr>
-<tr>
-<td>ZINTERSTORE</td>
-<td>ZINTERSTORE   key1 key1-count key2 [key]—-对给定的有序集合执行类似集合的交集运算</td>
-</tr>
-<tr>
-<td>ZUNIONSTORE</td>
-<td>ZUNIONSTORE key key-count key [key] 对给定的有序集合执行类似于集合的并集运算</td>
-</tr>
-</tbody>
-</table>
-</the></excerpt>
+<p>​    一般来说，比较常用的是<code>appendfsync everysec</code>选项，让Redis以每秒一次的频率对AOF文件进行同步。Redis每秒同步一次AOF文件的性能和不使用任何持久化特性时的性能相差无几，而通过每秒同步一次AOF文件，Redis可以保证，即时出现系统崩溃，用户最多丢失一秒之内产生的数据。</p>
+<h3 id="AOF的优缺点"><a href="#AOF的优缺点" class="headerlink" title="AOF的优缺点"></a>AOF的优缺点</h3><ul>
+<li>AOF 可以更好的保护数据不丢失，一般 AOF 会每隔 1 秒，通过一个后台线程执行一次<code>fsync</code>操作，最多丢失 1 秒钟的数据。</li>
+<li>AOF 日志文件以 <code>append-only</code> 模式写入，所以没有任何磁盘寻址的开销，写入性能非常高，而且文件不容易破损，即使文件尾部破损，也很容易修复。</li>
+<li>AOF 日志文件即使过大的时候，出现后台重写操作，也不会影响客户端的读写。因为在 <code>rewrite</code> log 的时候，会对其中的指导进行压缩，创建出一份需要恢复数据的最小日志出来。再创建新日志文件的时候，老的日志文件还是照常写入。当新的 merge 后的日志文件 ready 的时候，再交换新老日志文件即可。</li>
+<li>AOF 日志文件的命令通过非常可读的方式进行记录，这个特性非常<strong>适合做灾难性的误删除的紧急恢复</strong>。比如某人不小心用 <code>flushall</code> 命令清空了所有数据，只要这个时候后台 <code>rewrite</code> 还没有发生，那么就可以立即拷贝 AOF 文件，将最后一条 <code>flushall</code> 命令给删了，然后再将该 <code>AOF</code> 文件放回去，就可以通过恢复机制，自动恢复所有数据。</li>
+<li>对于同一份数据来说，AOF 日志文件通常比 RDB 数据快照文件更大。</li>
+<li>AOF 开启后，支持的写 QPS 会比 RDB 支持的写 QPS 低，因为 AOF 一般会配置成每秒 <code>fsync</code> 一次日志文件，当然，每秒一次 <code>fsync</code>，性能也还是很高的。（如果实时写入，那么 QPS 会大降，redis 性能会大大降低）</li>
+<li>以前 AOF 发生过 bug，就是通过 AOF 记录的日志，进行数据恢复的时候，没有恢复一模一样的数据出来。所以说，类似 AOF 这种较为复杂的基于命令日志/merge/回放的方式，比基于 RDB 每次持久化一份完整的数据快照文件的方式，更加脆弱一些，容易有 bug。不过 AOF 就是为了避免 rewrite 过程导致的 bug，因此每次 rewrite 并不是基于旧的指令日志进行 merge 的，而是<strong>基于当时内存中的数据进行指令的重新构建</strong>，这样健壮性会好很多。</li>
+</ul>
+<p><br></p>
+<h2 id="RDB和AOF到底该如何选择"><a href="#RDB和AOF到底该如何选择" class="headerlink" title="RDB和AOF到底该如何选择"></a>RDB和AOF到底该如何选择</h2><ul>
+<li>不要仅仅使用 RDB，因为那样会导致你丢失很多数据</li>
+<li>也不要仅仅使用 AOF，因为那样有两个问题，第一，你通过 AOF 做冷备，没有 RDB 做冷备，来的恢复速度更快; 第二，RDB 每次简单粗暴生成数据快照，更加健壮，可以避免 AOF 这种复杂的备份和恢复机制的 bug。</li>
+<li>redis 支持同时开启开启两种持久化方式，我们可以综合使用 AOF 和 RDB 两种持久化机制，用 AOF 来保证数据不丢失，作为数据恢复的第一选择; 用 RDB 来做不同程度的冷备，在 AOF 文件都丢失或损坏不可用的时候，还可以使用 RDB 来进行快速的数据恢复。</li>
+</ul>
+<h3 id="补充Redis-4-0-混合持久化"><a href="#补充Redis-4-0-混合持久化" class="headerlink" title="补充Redis 4.0 混合持久化"></a>补充Redis 4.0 混合持久化</h3><p>​    重启 Redis 时，我们很少使用 rdb 来恢复内存状态，因为会丢失大量数据。我们通常使用 AOF 日志重放，但是重放 AOF 日志性能相对 rdb 来说要慢很多，这样在 Redis 实例很大的情况下，启动需要花费很长的时间。</p>
+<p>Redis 4.0 为了解决这个问题，带来了一个新的持久化选项——混合持久化。将 rdb 文件的内容和增量的 AOF 日志文件存在一起。这里的 AOF 日志不再是全量的日志，而是自持久化开始到持久化结束的这段时间发生的增量 AOF 日志，通常这部分 AOF 日志很小。</p>
+<p>​    于是在 Redis 重启的时候，可以先加载 rdb 的内容，然后再重放增量 AOF 日志就可以完全替代之前的 AOF 全量文件重放，重启效率因此大幅得到提升。</p>
+<p><br></p>
+<p>参考书籍《Redis 实战》</p>
+<p>参考文件：</p>
+</excerpt>
       
     </div>
     
@@ -728,13 +413,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2019/01/19/redis深入学习之5种基本数据类型/">Redis深入学习之5种基本数据类型</a></p>
+        <p><span>本文标题:</span><a href="/2019/01/26/redis深入学习之数据持久化/">redis深入学习之数据持久化</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">dailn</a></p>
-        <p><span>发布时间:</span>2019-01-19, 15:06:38</p>
-        <p><span>最后更新:</span>2019-01-21, 01:50:57</p>
+        <p><span>发布时间:</span>2019-01-26, 11:00:23</p>
+        <p><span>最后更新:</span>2019-01-26, 13:26:00</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2019/01/19/redis深入学习之5种基本数据类型/" title="Redis深入学习之5种基本数据类型">http://yoursite.com/2019/01/19/redis深入学习之5种基本数据类型/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/01/19/redis深入学习之5种基本数据类型/　　作者: dailn" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2019/01/26/redis深入学习之数据持久化/" title="redis深入学习之数据持久化">http://yoursite.com/2019/01/26/redis深入学习之数据持久化/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/01/26/redis深入学习之数据持久化/　　作者: dailn" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -746,16 +431,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2019/01/21/redis深入学习之实现主动和哨兵/">
-                    redis深入学习之实现主从和哨兵
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2019/01/13/markdown插入本地图片小策略/">
-                    markdown插入本地图片小技巧
+                <a href="/2019/01/21/redis深入学习之实现主动和哨兵/">
+                    redis深入学习之实现主从和哨兵
                 </a>
             </div>
         
@@ -767,7 +446,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis-5种基本数据类型"><span class="toc-number">1.</span> <span class="toc-text">Redis 5种基本数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字符串"><span class="toc-number">1.2.</span> <span class="toc-text">字符串</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#列表"><span class="toc-number">1.3.</span> <span class="toc-text">列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集合"><span class="toc-number">1.4.</span> <span class="toc-text">集合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#散列"><span class="toc-number">1.5.</span> <span class="toc-text">散列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有序集合"><span class="toc-number">1.6.</span> <span class="toc-text">有序集合</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis数据持久化"><span class="toc-number">1.</span> <span class="toc-text">Redis数据持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快照持久化"><span class="toc-number">1.2.</span> <span class="toc-text">快照持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概念"><span class="toc-number">1.2.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建快照-RDB-的方法"><span class="toc-number">1.2.2.</span> <span class="toc-text">创建快照(RDB)的方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RDB优缺点"><span class="toc-number">1.2.3.</span> <span class="toc-text">RDB优缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AOF持久化"><span class="toc-number">1.3.</span> <span class="toc-text">AOF持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概念-1"><span class="toc-number">1.3.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#打开及配置AOF持久化"><span class="toc-number">1.3.2.</span> <span class="toc-text">打开及配置AOF持久化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOF的优缺点"><span class="toc-number">1.3.3.</span> <span class="toc-text">AOF的优缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RDB和AOF到底该如何选择"><span class="toc-number">1.4.</span> <span class="toc-text">RDB和AOF到底该如何选择</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#补充Redis-4-0-混合持久化"><span class="toc-number">1.4.1.</span> <span class="toc-text">补充Redis 4.0 混合持久化</span></a></li></ol></li></ol></li></ol>
         
     </div>
     <style>
@@ -803,7 +482,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"Redis深入学习之5种基本数据类型　| dailn的个人博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"redis深入学习之数据持久化　| dailn的个人博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -845,15 +524,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2019/01/21/redis深入学习之实现主动和哨兵/" title="上一篇: redis深入学习之实现主从和哨兵">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2019/01/13/markdown插入本地图片小策略/" title="下一篇: markdown插入本地图片小技巧">
+            <a href="/2019/01/21/redis深入学习之实现主动和哨兵/" title="下一篇: redis深入学习之实现主从和哨兵">
                 <i class="fa fa-angle-right"></i>
             </a>
         
