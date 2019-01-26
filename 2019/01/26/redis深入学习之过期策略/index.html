@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="dailn的个人博客">
 <meta property="og:description" content="Redis过期策略 前言​    我们都知道Redis是一个键值对内存数据库，我们设置键值对时，可以对键值对设置超时时间。所以那些过期了的键值对就需要一种清理策略来清理。需要清理的场景主要有两种，一种是Redis那些设置了超时时间并且已经超时的键值对，此时的键值对失效了需要被清理，这种场景会采用定时删除+惰性删除的策略来清理。另外一种是由于Redis配置的内存已经到达上限，需要对那些过期或者">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-26T15:46:45.163Z">
+<meta property="og:updated_time" content="2019-01-26T15:50:13.010Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis深入学习之过期策略">
 <meta name="twitter:description" content="Redis过期策略 前言​    我们都知道Redis是一个键值对内存数据库，我们设置键值对时，可以对键值对设置超时时间。所以那些过期了的键值对就需要一种清理策略来清理。需要清理的场景主要有两种，一种是Redis那些设置了超时时间并且已经超时的键值对，此时的键值对失效了需要被清理，这种场景会采用定时删除+惰性删除的策略来清理。另外一种是由于Redis配置的内存已经到达上限，需要对那些过期或者">
@@ -369,6 +369,7 @@
 <p>volatile-xxx 策略只会针对带过期时间的 key 进行淘汰，allkeys-xxx 策略会对所有的 key 进行淘汰。如果你只是拿 Redis 做缓存，那应该使用 allkeys-xxx，客户端写缓存时不必携带过期时间。如果你还想同时使用 Redis 的持久化功能，那就使用 volatile-xxx 策略，这样可以保留没有设置过期时间的 key，它们是永久的 key 不会被 LRU 算法淘汰。</p>
 <p><br></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>​    Redis过期策略有三种，定时删除部分过期数据、惰性删除部分再次被访问的过期数据、基于内存淘汰策略淘汰部分数据。了解了Redis过期策略，有助于我们更好的理解Redis。</p>
+<p>参考文章<br><a href="https://juejin.im/book/5afc2e5f6fb9a07a9b362527/section/5b4c5158f265da0fa50a0b17" target="_blank" rel="noopener">过期策略</a></p>
 </the></excerpt>
       
     </div>
@@ -380,7 +381,7 @@
         <p><span>本文标题:</span><a href="/2019/01/26/redis深入学习之过期策略/">Redis深入学习之过期策略</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">dailn</a></p>
         <p><span>发布时间:</span>2019-01-26, 23:01:23</p>
-        <p><span>最后更新:</span>2019-01-26, 23:46:45</p>
+        <p><span>最后更新:</span>2019-01-26, 23:50:13</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/01/26/redis深入学习之过期策略/" title="Redis深入学习之过期策略">http://yoursite.com/2019/01/26/redis深入学习之过期策略/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/01/26/redis深入学习之过期策略/　　作者: dailn" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
