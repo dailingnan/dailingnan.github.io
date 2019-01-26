@@ -15,18 +15,18 @@
 
 
 
-<meta name="description" content="背景​    在多线程中，我们使用加锁机制来确保线程安全，但如果使用不当，则可能导致死锁。JVM解决死锁问题方面，并不像数据库服务那么强大（数据库系统设计中考虑了检测死锁以及从死锁中恢复），当一组Java线程发生死锁时，”游戏”到此结束，这些线程永远不能再使用了。">
-<meta name="keywords" content="Java,并发,多线程">
+<meta name="description" content="Redis过期策略 前言​    我们都知道Redis是一个键值对内存数据库，我们设置键值对时，可以对键值对设置超时时间。所以那些过期了的键值对就需要一种清理策略来清理。需要清理的场景主要有两种，一种是Redis那些设置了超时时间并且已经超时的键值对，此时的键值对失效了需要被清理，这种场景会采用定时删除+惰性删除的策略来清理。另外一种是由于Redis配置的内存已经到达上限，需要对那些过期或者">
+<meta name="keywords" content="微缓存,Redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="啃透Java并发之死锁篇">
-<meta property="og:url" content="http://yoursite.com/2019/01/06/啃透Java并发之死锁篇/index.html">
+<meta property="og:title" content="Redis深入学习之过期策略">
+<meta property="og:url" content="http://yoursite.com/2019/01/26/redis深入学习之过期策略/index.html">
 <meta property="og:site_name" content="dailn的个人博客">
-<meta property="og:description" content="背景​    在多线程中，我们使用加锁机制来确保线程安全，但如果使用不当，则可能导致死锁。JVM解决死锁问题方面，并不像数据库服务那么强大（数据库系统设计中考虑了检测死锁以及从死锁中恢复），当一组Java线程发生死锁时，”游戏”到此结束，这些线程永远不能再使用了。">
+<meta property="og:description" content="Redis过期策略 前言​    我们都知道Redis是一个键值对内存数据库，我们设置键值对时，可以对键值对设置超时时间。所以那些过期了的键值对就需要一种清理策略来清理。需要清理的场景主要有两种，一种是Redis那些设置了超时时间并且已经超时的键值对，此时的键值对失效了需要被清理，这种场景会采用定时删除+惰性删除的策略来清理。另外一种是由于Redis配置的内存已经到达上限，需要对那些过期或者">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-06T11:50:51.150Z">
+<meta property="og:updated_time" content="2019-01-26T15:46:45.163Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="啃透Java并发之死锁篇">
-<meta name="twitter:description" content="背景​    在多线程中，我们使用加锁机制来确保线程安全，但如果使用不当，则可能导致死锁。JVM解决死锁问题方面，并不像数据库服务那么强大（数据库系统设计中考虑了检测死锁以及从死锁中恢复），当一组Java线程发生死锁时，”游戏”到此结束，这些线程永远不能再使用了。">
+<meta name="twitter:title" content="Redis深入学习之过期策略">
+<meta name="twitter:description" content="Redis过期策略 前言​    我们都知道Redis是一个键值对内存数据库，我们设置键值对时，可以对键值对设置超时时间。所以那些过期了的键值对就需要一种清理策略来清理。需要清理的场景主要有两种，一种是Redis那些设置了超时时间并且已经超时的键值对，此时的键值对失效了需要被清理，这种场景会采用定时删除+惰性删除的策略来清理。另外一种是由于Redis配置的内存已经到达上限，需要对那些过期或者">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -58,7 +58,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>啃透Java并发之死锁篇 | dailn的个人博客</title>
+<title>Redis深入学习之过期策略 | dailn的个人博客</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -271,11 +271,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我">
 </nav>
-      <div class="body-wrap"><article id="post-啃透Java并发之死锁篇" class="article article-type-post" itemscope="" itemprop="blogPost">
+      <div class="body-wrap"><article id="post-redis深入学习之过期策略" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2019/01/06/啃透Java并发之死锁篇/" class="article-date">
-      <time datetime="2019-01-06T09:13:43.000Z" itemprop="datePublished">2019-01-06</time>
+      <a href="/2019/01/26/redis深入学习之过期策略/" class="article-date">
+      <time datetime="2019-01-26T15:01:23.000Z" itemprop="datePublished">2019-01-26</time>
 </a>
 
 
@@ -290,7 +290,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      啃透Java并发之死锁篇
+      Redis深入学习之过期策略
     </h1>
   
 
@@ -300,7 +300,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">989字</span>
+        <span class="post-count">1.3k字</span>
       </span>
     </span>
 
@@ -309,7 +309,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-hourglass-half"></i>
         <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">3分</span>
+        <span class="post-count">4分</span>
       </span>
     </span>
 </div>
@@ -321,13 +321,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Java并发编程/">Java并发编程</a>
+    <a class="article-category-link" href="/categories/Redis-教程/">Redis 教程</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/">Redis</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/微缓存/">微缓存</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -339,30 +339,36 @@
           
         <excerpt in="" index="" |="" 首页摘要=""> 
 
-<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>​    在多线程中，我们使用加锁机制来确保线程安全，但如果使用不当，则可能导致死锁。JVM解决死锁问题方面，并不像数据库服务那么强大（数据库系统设计中考虑了检测死锁以及从死锁中恢复），当一组Java线程发生死锁时，”游戏”到此结束，这些线程永远不能再使用了。</p>
+<h1 id="Redis过期策略"><a href="#Redis过期策略" class="headerlink" title="Redis过期策略"></a>Redis过期策略</h1><p><br></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>​    我们都知道Redis是一个键值对内存数据库，我们设置键值对时，可以对键值对设置超时时间。所以那些过期了的键值对就需要一种清理策略来清理。需要清理的场景主要有两种，一种是Redis那些设置了超时时间并且已经超时的键值对，此时的键值对失效了需要被清理，这种场景会采用定时删除+惰性删除的策略来清理。另外一种是由于Redis配置的内存已经到达上限，需要对那些过期或者还没过期的键值对按照内存淘汰策略进行清理，释放部分内存。</p>
 <a id="more"></a>
 <the rest="" of="" contents="" |="" 余下全文="">
 
-<h1 id="死锁的含义"><a href="#死锁的含义" class="headerlink" title="死锁的含义"></a>死锁的含义</h1><p>​    当线程A持有锁L并想获得锁M的同时，线程B持有锁M并尝试所得锁L，那么这两个线程将永远的等待下去，这种情况就是最简单的死锁。</p>
-<h1 id="死锁产生的四个必要条件"><a href="#死锁产生的四个必要条件" class="headerlink" title="死锁产生的四个必要条件"></a>死锁产生的四个必要条件</h1><ul>
-<li>互斥条件：进程要求对所分配的资源（如打印机）进行排他性控制，即在一段时间内某 资源仅为一个进程所占有。此时若有其他进程请求该资源，则请求进程只能等待。</li>
-<li>不剥夺条件：进程所获得的资源在未使用完毕之前，不能被其他进程强行夺走，即只能 由获得该资源的进程自己来释放（只能是主动释放)。</li>
-<li>请求和保持条件：进程已经保持了至少一个资源，但又提出了新的资源请求，而该资源 已被其他进程占有，此时请求进程被阻塞，但对自己已获得的资源保持不放。</li>
-<li>循环等待条件：存在一种进程资源的循环等待链，链中每一个进程已获得的资源同时被 链中下一个进程所请求。</li>
-</ul>
-<h1 id="死锁示例"><a href="#死锁示例" class="headerlink" title="死锁示例"></a>死锁示例</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.demo1.controller;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LockTest</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Object left= <span class="keyword">new</span> Object();</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Object right = <span class="keyword">new</span> Object();</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span>  <span class="title">test</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (left)&#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">                    System.out.println(<span class="string">"获得left锁"</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                System.out.println(<span class="string">"持有left锁，请求获取right"</span>);</span><br><span class="line">                <span class="keyword">synchronized</span> (right)&#123;</span><br><span class="line">                    System.out.println(<span class="string">"获取right成功"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">"left-right解锁完毕"</span>);</span><br><span class="line">        &#125;).start();</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (right)&#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">                    System.out.println(<span class="string">"获得right锁"</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                System.out.println(<span class="string">"持有right锁，请求获取left锁"</span>);</span><br><span class="line">                <span class="keyword">synchronized</span> (left)&#123;</span><br><span class="line">                    System.out.println(<span class="string">"成功获取left锁"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">"right-left解锁完毕"</span>);</span><br><span class="line">        &#125;).start();</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        LockTest lt = <span class="keyword">new</span> LockTest();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            lt.test();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>结果：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">获得right锁</span><br><span class="line">持有right锁，请求获取left锁</span><br><span class="line">获得left锁</span><br><span class="line">持有left锁，请求获取right</span><br></pre></td></tr></table></figure>
-<p>以上是一个简单的死锁例子，产生死锁的原因是因为两个线程试图以不同的顺序来获得相同的锁。如果按照相同的顺序来请求锁，那么就不会出现循环的加锁依赖性，因此就不会产生死锁。</p>
-<p>死锁一旦发生，在java中就只能中断程序了，所以我们需要在实际中避免死锁的发生。</p>
-<h1 id="死锁的避免"><a href="#死锁的避免" class="headerlink" title="死锁的避免"></a>死锁的避免</h1><ul>
-<li>加锁顺序：尽量让线程按照顺序加锁。</li>
-<li>加锁时限：尝试使用lock.trylock代替内置锁，当然只是在特定的场合（需要使用到定时锁，或者可中断锁的时候），否则应当优先使用内置锁，内置锁1.6优化后内置锁效率接近显示锁。</li>
-<li>加锁资源：避免一个线程在锁内同时占有多个资源，尽量保证每个锁只占有一个资源。</li>
-<li>加锁数量：避免一个线程同时获取多个锁（上面的例子就是一个线程获取两个锁），有需要时应该尽量缩小锁的范围，能用同步块加锁就不要用同步方法加锁。尽量使用开放调用（在调用某个方法时不需要持有锁，那么这种调用被称为开放调用）。</li>
-</ul>
-<hr>
-<p>感兴趣的朋友可以学习下银行家算法（避免死锁发生的著名算法）</p>
+<p>​    Redis之所以要采用这几种过期策略。主要因为 Redis 是单线程的，清理键值对的时间也会占用线程的处理时间，如果清理的太过于繁忙，将会导致线上读写指令出现卡顿。</p>
+<p><br></p>
+<h2 id="定时删除"><a href="#定时删除" class="headerlink" title="定时删除"></a>定时删除</h2><p>​    redis 会将每个设置了过期时间的 key 放入到一个独立的字典中，以后会定时遍历这个字典来删除到期的 key。Redis 默认会每秒进行十次过期扫描，过期扫描不会遍历过期字典中所有的 key，而是采用了一种简单的贪心策略。</p>
+<ol>
+<li>从过期字典中随机 20 个 key；</li>
+<li>删除这 20 个 key 中已经过期的 key；</li>
+<li>如果过期的 key 比率超过 1/4，那就重复步骤 1；</li>
+</ol>
+<p>同时，为了保证过期扫描不会出现循环过度，导致线程卡死现象，算法还增加了扫描时间的上限，默认不会超过 25ms。</p>
+<h3 id="从库的过期策略"><a href="#从库的过期策略" class="headerlink" title="从库的过期策略"></a>从库的过期策略</h3><p>​    这里从库需要特别说明下，从库不会进行过期扫描，从库对过期的处理是被动的。主库在 key 到期时，会在 AOF 文件里增加一条 <code>del</code> 指令，同步到所有的从库，从库通过执行这条 <code>del</code> 指令来删除过期的 key。</p>
+<p><br></p>
+<h2 id="惰性删除"><a href="#惰性删除" class="headerlink" title="惰性删除"></a>惰性删除</h2><p>​    看了上面定时删除。肯定就会知道，定时删除会存在一个问题，定期删除可能会导致很多过期 key 到了时间并没有被删除掉，那咋整呢？</p>
+<p>​    这就要用到惰性删除了。这就是说，在你获取某个 key 的时候，Redis 会检查一下 ，这个 key 如果设置了过期时间那么是否过期了？如果过期了此时就会删除，不会给你返回任何东西。</p>
+<p><br></p>
+<h2 id="内存淘汰机制"><a href="#内存淘汰机制" class="headerlink" title="内存淘汰机制"></a>内存淘汰机制</h2><p>​    Redis经过上面的定时删除以及惰性删除还是有问题的，如果定期删除漏掉了很多过期 key，然后你也没及时去查，也就没走惰性删除，此时会怎么样？可能会存在大量过期 key 堆积在内存里，将会导致 redis 内存块耗尽</p>
+<p>​    这里说明下，在生产环境中我们是不允许 Redis 出现交换行为的，为了限制最大使用内存，Redis 提供了配置参数 <code>maxmemory</code> 来限制内存超出期望大小。针对上面的内存耗尽的问题，当实际内存超出 <code>maxmemory</code> 时，Redis 提供了几种可选策略 (maxmemory-policy) 来让用户自己决定该如何腾出新的空间以继续提供读写服务。</p>
+<p><strong>noeviction</strong> 不会继续服务写请求 (DEL 请求可以继续服务)，读请求可以继续进行。这样可以保证不会丢失数据，但是会让线上的业务不能持续进行。这是默认的淘汰策略。</p>
+<p><strong>volatile-lru</strong> 尝试淘汰设置了过期时间的 key，最少使用的 key 优先被淘汰。没有设置过期时间的 key 不会被淘汰，这样可以保证需要持久化的数据不会突然丢失。</p>
+<p><strong>volatile-ttl</strong> 跟上面一样，除了淘汰的策略不是 LRU，而是 key 的剩余寿命 ttl 的值，ttl 越小越优先被淘汰。</p>
+<p><strong>volatile-random</strong> 跟上面一样，不过淘汰的 key 是过期 key 集合中随机的 key。</p>
+<p><strong>allkeys-lru</strong> 区别于 volatile-lru，这个策略要淘汰的 key 对象是全体的 key 集合，而不只是过期的 key 集合。这意味着没有设置过期时间的 key 也会被淘汰（这种事最常用的）。</p>
+<p><strong>allkeys-random</strong> 跟上面一样，不过淘汰的策略是随机的 key。</p>
+<p>volatile-xxx 策略只会针对带过期时间的 key 进行淘汰，allkeys-xxx 策略会对所有的 key 进行淘汰。如果你只是拿 Redis 做缓存，那应该使用 allkeys-xxx，客户端写缓存时不必携带过期时间。如果你还想同时使用 Redis 的持久化功能，那就使用 volatile-xxx 策略，这样可以保留没有设置过期时间的 key，它们是永久的 key 不会被 LRU 算法淘汰。</p>
+<p><br></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>​    Redis过期策略有三种，定时删除部分过期数据、惰性删除部分再次被访问的过期数据、基于内存淘汰策略淘汰部分数据。了解了Redis过期策略，有助于我们更好的理解Redis。</p>
 </the></excerpt>
       
     </div>
@@ -371,13 +377,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2019/01/06/啃透Java并发之死锁篇/">啃透Java并发之死锁篇</a></p>
+        <p><span>本文标题:</span><a href="/2019/01/26/redis深入学习之过期策略/">Redis深入学习之过期策略</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">dailn</a></p>
-        <p><span>发布时间:</span>2019-01-06, 17:13:43</p>
-        <p><span>最后更新:</span>2019-01-06, 19:50:51</p>
+        <p><span>发布时间:</span>2019-01-26, 23:01:23</p>
+        <p><span>最后更新:</span>2019-01-26, 23:46:45</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2019/01/06/啃透Java并发之死锁篇/" title="啃透Java并发之死锁篇">http://yoursite.com/2019/01/06/啃透Java并发之死锁篇/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/01/06/啃透Java并发之死锁篇/　　作者: dailn" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2019/01/26/redis深入学习之过期策略/" title="Redis深入学习之过期策略">http://yoursite.com/2019/01/26/redis深入学习之过期策略/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/01/26/redis深入学习之过期策略/　　作者: dailn" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -389,16 +395,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2019/01/06/啃透Java并发之内存模型篇/">
-                    啃透Java并发之内存模型篇
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2019/01/06/啃透Java并发之synchronized篇/">
-                    啃透Java并发之synchronized篇
+                <a href="/2019/01/26/redis深入学习之数据持久化/">
+                    redis深入学习之数据持久化
                 </a>
             </div>
         
@@ -410,7 +410,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#死锁的含义"><span class="toc-number">2.</span> <span class="toc-text">死锁的含义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#死锁产生的四个必要条件"><span class="toc-number">3.</span> <span class="toc-text">死锁产生的四个必要条件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#死锁示例"><span class="toc-number">4.</span> <span class="toc-text">死锁示例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#死锁的避免"><span class="toc-number">5.</span> <span class="toc-text">死锁的避免</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis过期策略"><span class="toc-number">1.</span> <span class="toc-text">Redis过期策略</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#定时删除"><span class="toc-number">1.2.</span> <span class="toc-text">定时删除</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#从库的过期策略"><span class="toc-number">1.2.1.</span> <span class="toc-text">从库的过期策略</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#惰性删除"><span class="toc-number">1.3.</span> <span class="toc-text">惰性删除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存淘汰机制"><span class="toc-number">1.4.</span> <span class="toc-text">内存淘汰机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.5.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -446,7 +446,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"啃透Java并发之死锁篇　| dailn的个人博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"Redis深入学习之过期策略　| dailn的个人博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -488,15 +488,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2019/01/06/啃透Java并发之内存模型篇/" title="上一篇: 啃透Java并发之内存模型篇">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2019/01/06/啃透Java并发之synchronized篇/" title="下一篇: 啃透Java并发之synchronized篇">
+            <a href="/2019/01/26/redis深入学习之数据持久化/" title="下一篇: redis深入学习之数据持久化">
                 <i class="fa fa-angle-right"></i>
             </a>
         

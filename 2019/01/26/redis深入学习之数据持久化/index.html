@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="dailn的个人博客">
 <meta property="og:description" content="Redis数据持久化 前言​    Redis 的数据全部在内存里，之所以需要持久化在硬盘是为了在之后能重用数据，或者是为了防止系统故障、宕机导致内存中的数据全部丢失。另外，存储在Redis中的数据有可能是经过长时间计算得出的，或者有程序正在使用Redis存储的数据进行计算，所以用户会希望自己可以将这些数据存储起来以便之后使用，不需要重新计算了。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-26T05:27:43.742Z">
+<meta property="og:updated_time" content="2019-01-26T08:09:39.810Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redis深入学习之数据持久化">
 <meta name="twitter:description" content="Redis数据持久化 前言​    Redis 的数据全部在内存里，之所以需要持久化在硬盘是为了在之后能重用数据，或者是为了防止系统故障、宕机导致内存中的数据全部丢失。另外，存储在Redis中的数据有可能是经过长时间计算得出的，或者有程序正在使用Redis存储的数据进行计算，所以用户会希望自己可以将这些数据存储起来以便之后使用，不需要重新计算了。">
@@ -419,7 +419,7 @@
         <p><span>本文标题:</span><a href="/2019/01/26/redis深入学习之数据持久化/">redis深入学习之数据持久化</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">dailn</a></p>
         <p><span>发布时间:</span>2019-01-26, 11:00:23</p>
-        <p><span>最后更新:</span>2019-01-26, 13:27:43</p>
+        <p><span>最后更新:</span>2019-01-26, 16:09:39</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/01/26/redis深入学习之数据持久化/" title="redis深入学习之数据持久化">http://yoursite.com/2019/01/26/redis深入学习之数据持久化/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/01/26/redis深入学习之数据持久化/　　作者: dailn" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -433,6 +433,12 @@
 
 
     <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2019/01/26/redis深入学习之过期策略/">
+                    Redis深入学习之过期策略
+                </a>
+            </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
@@ -527,7 +533,9 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+            <a href="/2019/01/26/redis深入学习之过期策略/" title="上一篇: Redis深入学习之过期策略">
+                <i class="fa fa-angle-left"></i>
+            </a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
@@ -539,7 +547,7 @@
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/01/26/redis深入学习之数据持久化/">redis深入学习之数据持久化</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/21/redis深入学习之实现主动和哨兵/">redis深入学习之实现主从和哨兵</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/19/redis深入学习之5种基本数据类型/">Redis深入学习之5种基本数据类型</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/13/markdown插入本地图片小策略/">markdown插入本地图片小技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/12/Spring-Cloud-hystrix服务短路和服务降级/">Spring Cloud hystrix服务短路和服务降级</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/使用Hexo搭建个人博客/">使用Hexo搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Spring Cloud Ribbon实现负载均衡/">Spring Cloud 负载均衡</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Spring Cloud 服务端高可用/">Spring Cloud 服务端高可用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Spring Cloud 服务注册和发现/">Spring Cloud 服务注册和发现</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之死锁篇/">啃透Java并发之死锁篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发AQS源码分析篇/">啃透Java并发AQS源码分析篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之synchronized篇/">啃透Java并发之synchronized篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之内存模型篇/">啃透Java并发之内存模型篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之原子操作类-AtomicLong源码分析-和非阻塞算法篇/">啃透Java并发之原子操作类(AtomicLong源码分析)和非阻塞算法篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之线程池篇/">啃透Java并发之线程池篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/Java构建对象实用技巧之Builder模式/">Java构建对象实用技巧之Builder模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/设计模式之策略模式/">设计模式之策略模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/设计模式之观察者模式/">设计模式之观察者模式</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/01/26/redis深入学习之过期策略/">Redis深入学习之过期策略</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/26/redis深入学习之数据持久化/">redis深入学习之数据持久化</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/21/redis深入学习之实现主动和哨兵/">redis深入学习之实现主从和哨兵</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/19/redis深入学习之5种基本数据类型/">Redis深入学习之5种基本数据类型</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/13/markdown插入本地图片小策略/">markdown插入本地图片小技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/12/Spring-Cloud-hystrix服务短路和服务降级/">Spring Cloud hystrix服务短路和服务降级</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/使用Hexo搭建个人博客/">使用Hexo搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Spring Cloud 服务注册和发现/">Spring Cloud 服务注册和发现</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Spring Cloud Ribbon实现负载均衡/">Spring Cloud 负载均衡</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Spring Cloud 服务端高可用/">Spring Cloud 服务端高可用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之线程池篇/">啃透Java并发之线程池篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之内存模型篇/">啃透Java并发之内存模型篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之死锁篇/">啃透Java并发之死锁篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之synchronized篇/">啃透Java并发之synchronized篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发AQS源码分析篇/">啃透Java并发AQS源码分析篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/啃透Java并发之原子操作类-AtomicLong源码分析-和非阻塞算法篇/">啃透Java并发之原子操作类(AtomicLong源码分析)和非阻塞算法篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/设计模式之观察者模式/">设计模式之观察者模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/设计模式之策略模式/">设计模式之策略模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/Java构建对象实用技巧之Builder模式/">Java构建对象实用技巧之Builder模式</a></li></ul>
 
 
 
