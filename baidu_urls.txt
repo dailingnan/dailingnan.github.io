@@ -1,3 +1,3 @@
-http://www.dailingnan.work/2019/01/30/test/
 http://www.dailingnan.work/2019/01/26/redis深入学习之过期策略/
 http://www.dailingnan.work/2019/01/26/redis深入学习之数据持久化/
+http://www.dailingnan.work/2019/01/21/redis深入学习之实现主动和哨兵/
