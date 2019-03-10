@@ -23,10 +23,12 @@
 <meta property="og:site_name" content="dailn的个人博客">
 <meta property="og:description" content="Zookeeper学习之CAP和BASE理论前言随机分布式的发展，系统变得越来越复杂，于是如何构建一个兼顾可用性和一致性的分布式系统成为了无数个工程师探讨的难题，出现了诸如CAP和BASE这样的分布式系统经典理论。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-10T14:30:16.350Z">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/98BE7CBDF3424849AF7CFA5CDD64ACE4?method=download&shareKey=8d905e4f8635671aa4214ce82b438240">
+<meta property="og:updated_time" content="2019-03-10T15:09:03.015Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Zookeeper学习之CAP和BASE理论">
 <meta name="twitter:description" content="Zookeeper学习之CAP和BASE理论前言随机分布式的发展，系统变得越来越复杂，于是如何构建一个兼顾可用性和一致性的分布式系统成为了无数个工程师探讨的难题，出现了诸如CAP和BASE这样的分布式系统经典理论。">
+<meta name="twitter:image" content="https://note.youdao.com/yws/api/personal/file/98BE7CBDF3424849AF7CFA5CDD64ACE4?method=download&shareKey=8d905e4f8635671aa4214ce82b438240">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -350,7 +352,7 @@
 <p>2000年7月，加州大学伯克利分校的Eric Brewer教授在ACM PODC会议上提出CAP猜想。2年后，麻省理工学院的Seth Gilbert和Nancy Lynch从理论上证明了CAP。之后，CAP理论正式成为分布式计算领域的公认定理。</p>
 </blockquote>
 <p>CAP理论告诉我们，一个分布式系统不可能同时满足一致性（C:Consistency）、可用性（A:Availability）和分区容错性（P:Partition tolerance）这三个基本需求，最多只能同时满足其中的两项。</p>
-<h3 id="一致性"><a href="#一致性" class="headerlink" title="一致性"></a>一致性</h3><p>在分布式环境中，一致性是指数据在多个副本之间是否能够保持一致的特性。在一致性的需求下，当一个系统在数据一致的状态下执行更新操作后，应该保证系统的数据仍然处于一致的状态。</p>
+<h3 id="一致性"><a href="#一致性" class="headerlink" title="一致性"></a>一致性<img src="https://note.youdao.com/yws/api/personal/file/98BE7CBDF3424849AF7CFA5CDD64ACE4?method=download&amp;shareKey=8d905e4f8635671aa4214ce82b438240" alt=""></h3><p>在分布式环境中，一致性是指数据在多个副本之间是否能够保持一致的特性。在一致性的需求下，当一个系统在数据一致的状态下执行更新操作后，应该保证系统的数据仍然处于一致的状态。</p>
 <p>这里的一致性指的是强一致性，如果能够做到针对一个数据项的更新操作执行成功后，所有的用户都可以读取到最新的值，那么这样的系统就被认为具有强一致性（或严格的一致性）。</p>
 <h3 id="可用性"><a href="#可用性" class="headerlink" title="可用性"></a>可用性</h3><p>可用性是指系统提供的服务必须一直处于可用的状态，对于用户的每一个操作请求总是能够在有限的时间内返回结果。</p>
 <p>对于一个可用性的系统，每一个非故障的节点必须对每一个请求做出响应。所以，一般我们在衡量一个系统的可用性的时候，业界通常用多少个9来衡量网站的可用性，看看一年的全年停机时间是多少。</p>
@@ -437,7 +439,7 @@
         <p><span>本文标题:</span><a href="/2019/03/10/Zookeeper学习之CAP和BASE理论/">Zookeeper学习之CAP和BASE理论</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">dailn</a></p>
         <p><span>发布时间:</span>2019-03-10, 20:53:45</p>
-        <p><span>最后更新:</span>2019-03-10, 22:30:16</p>
+        <p><span>最后更新:</span>2019-03-10, 23:09:03</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/03/10/Zookeeper学习之CAP和BASE理论/" title="Zookeeper学习之CAP和BASE理论">http://www.dailingnan.work/2019/03/10/Zookeeper学习之CAP和BASE理论/</a>
             <span class="copy-path" data-clipboard-text="原文: http://www.dailingnan.work/2019/03/10/Zookeeper学习之CAP和BASE理论/　　作者: dailn" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
